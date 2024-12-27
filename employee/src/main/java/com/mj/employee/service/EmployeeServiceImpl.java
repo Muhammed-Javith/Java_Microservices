@@ -3,6 +3,7 @@ package com.mj.employee.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,22 +19,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
+	@Autowired
+	private ModelMapper modelMapper;
+
 	// user employeDto to employeentity conversion
 	public Employee mapToEntity(EmployeeDto employeeDto) {
-		Employee employee = new Employee();
-		employee.setName(employeeDto.getName());
-		employee.setEmail(employeeDto.getEmail());
-		employee.setAddress(employeeDto.getAddress());
+		Employee employee = this.modelMapper.map(employeeDto, Employee.class);
 		return employee;
 	}
 
 	// employeeentity to employedto conversion
 	public EmployeeDto mapToDto(Employee employee) {
-		EmployeeDto employeeDto = new EmployeeDto();
-		employeeDto.setId(employee.getId());
-		employeeDto.setName(employee.getName());
-		employeeDto.setEmail(employee.getEmail());
-		employeeDto.setAddress(employee.getAddress());
+		EmployeeDto employeeDto = this.modelMapper.map(employee, EmployeeDto.class);
 		return employeeDto;
 	}
 
@@ -41,7 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public EmployeeDto createEmployee(EmployeeDto employeeDto) throws EmployeeAlreadyExistException {
 		try {
 			getEmployeeByEmail(employeeDto.getEmail());
-			throw new EmployeeAlreadyExistException("Employee email " + employeeDto.getEmail()+" already exists ");
+			throw new EmployeeAlreadyExistException("Employee email " + employeeDto.getEmail() + " already exists ");
 		} catch (EmployeeNotFoundException ex) {
 			Employee employee = this.mapToEntity(employeeDto);
 			Employee savedemployee = this.employeeRepository.save(employee);
@@ -68,7 +65,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 				.orElseThrow(() -> new EmployeeNotFoundException("Employee id " + id + " is not found with Id"));
 		if (!updateEmployee.getEmail().equals(employeeDto.getEmail())
 				&& this.employeeRepository.existsByEmail(employeeDto.getEmail())) {
-			throw new EmployeeAlreadyExistException("Employee email " + employeeDto.getEmail() + " already used by another Employee");
+			throw new EmployeeAlreadyExistException(
+					"Employee email " + employeeDto.getEmail() + " already used by another Employee");
 		}
 		updateEmployee.setName(employeeDto.getName());
 		updateEmployee.setEmail(employeeDto.getEmail());
