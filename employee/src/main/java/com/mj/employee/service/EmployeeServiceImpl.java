@@ -3,11 +3,11 @@ package com.mj.employee.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mj.employee.Payload.EmployeeDto;
+import com.mj.employee.config.EmployeeMapper;
 import com.mj.employee.entity.Employee;
 import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.EmployeeNotFoundException;
@@ -19,19 +19,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
+	private final EmployeeMapper employeeMapper;
+
 	@Autowired
-	private ModelMapper modelMapper;
-
-	// user employeDto to employeentity conversion
-	public Employee mapToEntity(EmployeeDto employeeDto) {
-		Employee employee = this.modelMapper.map(employeeDto, Employee.class);
-		return employee;
-	}
-
-	// employeeentity to employedto conversion
-	public EmployeeDto mapToDto(Employee employee) {
-		EmployeeDto employeeDto = this.modelMapper.map(employee, EmployeeDto.class);
-		return employeeDto;
+	public EmployeeServiceImpl(EmployeeMapper employeeMapper) {
+		this.employeeMapper = employeeMapper;
 	}
 
 	@Override
@@ -40,9 +32,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 			getEmployeeByEmail(employeeDto.getEmail());
 			throw new EmployeeAlreadyExistException("Employee email " + employeeDto.getEmail() + " already exists ");
 		} catch (EmployeeNotFoundException ex) {
-			Employee employee = this.mapToEntity(employeeDto);
+			Employee employee = employeeMapper.mapToEntity(employeeDto);
 			Employee savedemployee = this.employeeRepository.save(employee);
-			return this.mapToDto(savedemployee);
+			return employeeMapper.mapToDto(savedemployee);
 		}
 	}
 
@@ -50,13 +42,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public EmployeeDto getEmployeeById(Long id) {
 		Employee employee = this.employeeRepository.findById(id)
 				.orElseThrow(() -> new EmployeeNotFoundException("Employee id " + id + " is not found with Id"));
-		return this.mapToDto(employee);
+		return employeeMapper.mapToDto(employee);
 	}
 
 	@Override
 	public List<EmployeeDto> getAllEmployee() {
 		List<Employee> employees = this.employeeRepository.findAll();
-		return employees.stream().map(employee -> this.mapToDto(employee)).collect(Collectors.toList());
+		return employees.stream().map(employee -> employeeMapper.mapToDto(employee)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -72,7 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		updateEmployee.setEmail(employeeDto.getEmail());
 		updateEmployee.setAddress(employeeDto.getAddress());
 		Employee updatedEmployee = this.employeeRepository.save(updateEmployee);
-		return this.mapToDto(updatedEmployee);
+		return employeeMapper.mapToDto(updatedEmployee);
 	}
 
 	@Override
@@ -86,7 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public EmployeeDto getEmployeeByEmail(String email) {
 		Employee employee = this.employeeRepository.findByEmail(email)
 				.orElseThrow(() -> new EmployeeNotFoundException("Employee id " + email + " is not found with email"));
-		return this.mapToDto(employee);
+		return employeeMapper.mapToDto(employee);
 
 	}
 }
