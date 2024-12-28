@@ -16,8 +16,7 @@ public class EmployeeExceptionHandler {
 	@ExceptionHandler(EmployeeNotFoundException.class)
 	public ResponseEntity<EmployeeResponse<?>> EmployeeNotFoundExceptionHandler(EmployeeNotFoundException exception) {
 		EmployeeResponse<?> response = new EmployeeResponse<>(exception.getMessage(), HttpStatus.NOT_FOUND.value());
-		//return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-		return new ResponseEntity<>(response,HttpStatus.OK);
+		return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(MissingFieldException.class)
