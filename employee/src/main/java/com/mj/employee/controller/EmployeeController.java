@@ -17,19 +17,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mj.employee.Payload.EmployeeDto;
 import com.mj.employee.Payload.EmployeeResponse;
+import com.mj.employee.annotation.EmployeeIdParam;
 import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.EmployeeNotFoundException;
 import com.mj.employee.exception.MissingFieldException;
 import com.mj.employee.service.EmployeeService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/employees")
+@Tag(name = "Employee APIs", description = "CRUD operations for employees")
 public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;
 
-	// Create a new employee
+	@Operation(summary = "Create a New Employee")
 	@PostMapping("/create")
 	public ResponseEntity<EmployeeResponse<EmployeeDto>> createEmployee(@RequestBody EmployeeDto employeeDto)
 			throws MissingFieldException, EmployeeAlreadyExistException {
@@ -42,16 +47,17 @@ public class EmployeeController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	// Get employee by ID
+	@Operation(summary = "Get a Employee Details by EmployeeId")
 	@GetMapping("/get/{id}")
-	public ResponseEntity<EmployeeResponse<?>> getEmployeeById(@PathVariable Long id) throws EmployeeNotFoundException {
+	public ResponseEntity<EmployeeResponse<?>> getEmployeeById(@EmployeeIdParam @PathVariable Long id)
+			throws EmployeeNotFoundException {
 		EmployeeDto employee = employeeService.getEmployeeById(id);
 		EmployeeResponse<EmployeeDto> response = new EmployeeResponse<>("Employee details retrieved successfully",
 				HttpStatus.OK.value(), employee);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	// Get all employees
+	@Operation(summary = "Get all Employee Details")
 	@GetMapping("/getall")
 	public ResponseEntity<EmployeeResponse<List<EmployeeDto>>> getAllEmployees() {
 		List<EmployeeDto> employees = employeeService.getAllEmployee();
@@ -60,19 +66,19 @@ public class EmployeeController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	// Update an employee by ID
+	@Operation(summary = "Update a Employee Details by EmployeeId")
 	@PutMapping("/update/{id}")
-	public ResponseEntity<EmployeeResponse<EmployeeDto>> updateEmployee(@PathVariable Long id,
+	public ResponseEntity<EmployeeResponse<EmployeeDto>> updateEmployee(@EmployeeIdParam @PathVariable Long id,
 			@RequestBody EmployeeDto employeeDto) throws EmployeeNotFoundException, EmployeeAlreadyExistException {
 		EmployeeDto updatedEmployee = employeeService.updateEmployee(employeeDto, id);
-		EmployeeResponse<EmployeeDto> response = new EmployeeResponse<>("Employee details for the id " + id + " updated successfully",
-				HttpStatus.OK.value(), updatedEmployee);
+		EmployeeResponse<EmployeeDto> response = new EmployeeResponse<>(
+				"Employee details for the id " + id + " updated successfully", HttpStatus.OK.value(), updatedEmployee);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	// Delete an employee by ID
+	@Operation(summary = "Delete a Employee Details by EmployeeId")
 	@DeleteMapping("/del/{id}")
-	public ResponseEntity<EmployeeResponse<?>> deleteEmployee(@PathVariable Long id) {
+	public ResponseEntity<EmployeeResponse<?>> deleteEmployee(@EmployeeIdParam @PathVariable Long id) {
 		employeeService.deleteEmployee(id);
 		EmployeeResponse<?> response = new EmployeeResponse<>("Employee deleted successfully",
 				HttpStatus.NO_CONTENT.value());
