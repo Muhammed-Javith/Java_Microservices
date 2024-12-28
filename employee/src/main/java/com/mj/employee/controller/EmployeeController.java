@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/api/employees")
 @Tag(name = "Employee APIs", description = "CRUD operations for employees")
+
 public class EmployeeController {
 
 	@Autowired
@@ -80,8 +81,8 @@ public class EmployeeController {
 	@DeleteMapping("/del/{id}")
 	public ResponseEntity<EmployeeResponse<?>> deleteEmployee(@EmployeeIdParam @PathVariable Long id) {
 		employeeService.deleteEmployee(id);
-		EmployeeResponse<?> response = new EmployeeResponse<>("Employee deleted successfully",
-				HttpStatus.NO_CONTENT.value());
-		return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+		EmployeeResponse<?> response = new EmployeeResponse<>(
+				"Employee details for the id " + id + " deleted successfully", HttpStatus.OK.value());
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }
