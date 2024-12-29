@@ -3,6 +3,7 @@ package com.mj.employee.service;
 import java.util.List;
 
 import com.mj.employee.Payload.EmployeeDto;
+import com.mj.employee.Payload.EmployeePayrollDto;
 import com.mj.employee.exception.EmployeeAlreadyExistException;
 
 public interface EmployeeService {
@@ -17,5 +18,7 @@ public interface EmployeeService {
 	EmployeeDto updateEmployee(EmployeeDto employeeDto, Long id) throws EmployeeAlreadyExistException;
 
 	void deleteEmployee(Long id);
+
+	EmployeePayrollDto getEmployeeWithPayroll(Long id);
 
 }
