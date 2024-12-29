@@ -4,13 +4,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
+import com.mj.employee.controller.EmployeeController;
 import com.mj.employee.enity.Employee;
 import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.EmployeeNotFoundException;
 import com.mj.employee.payload.EmployeeDto;
+import com.mj.employee.payload.EmployeePayrollDto;
+import com.mj.employee.payload.PayrollDto;
 import com.mj.employee.repository.EmployeeRepository;
 
 @Service
@@ -21,6 +29,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+	@Autowired
+	private RestTemplate restTemplate;
+
+	@Value("${payroll.service.url}")
+	private String payrollServiceUrl;
+
+	Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
 	// user employeDto to employeentity conversion
 	public Employee mapToEntity(EmployeeDto employeeDto) {
@@ -87,6 +103,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Employee employee = this.employeeRepository.findByEmail(email)
 				.orElseThrow(() -> new EmployeeNotFoundException("Employee id " + email + " is not found with email"));
 		return this.mapToDto(employee);
+
+	}
+
+	@Override
+	public EmployeePayrollDto getEmployeeWithPayroll(Long id) {
+		Employee employee = this.employeeRepository.findById(id)
+				.orElseThrow(() -> new EmployeeNotFoundException("Employee id " + id + " is not found with Id"));
+		EmployeePayrollDto employeePayrollDto = modelMapper.map(employee, EmployeePayrollDto.class);
+		try {
+			PayrollDto payrollDto = restTemplate.getForObject(payrollServiceUrl + "get/" + id, PayrollDto.class, id);
+			employeePayrollDto.setPayrollInfo(payrollDto);
+			return employeePayrollDto;
+		} catch (HttpClientErrorException.NotFound ex) {
+			logger.error("Payroll for Employee ID {} not found in Payroll Service", id);
+			employeePayrollDto.setPayrollInfo(null);
+		}
+		return employeePayrollDto;
 
 	}
 

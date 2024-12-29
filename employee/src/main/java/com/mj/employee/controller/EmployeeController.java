@@ -22,6 +22,7 @@ import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.EmployeeNotFoundException;
 import com.mj.employee.exception.MissingFieldException;
 import com.mj.employee.payload.EmployeeDto;
+import com.mj.employee.payload.EmployeePayrollDto;
 import com.mj.employee.service.EmployeeService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,6 +83,14 @@ public class EmployeeController {
 	public ResponseEntity<?> deleteEmployee(@EmployeeIdParam @PathVariable Long id) {
 		employeeService.deleteEmployee(id);
 		return ResponseEntity.status(HttpStatus.OK).body("EmpId " + id + " is deleted successfully.");
+	}
+
+	@Operation(summary = "Get a Payroll Details by EmployeeId")
+	@Tag(name = "Microservice APIs", description = "Employee Payroll Microservive API Communication")
+	@GetMapping("/getWithPayroll/{id}")
+	public ResponseEntity<?> getEmployeeWithPayrollById(@EmployeeIdParam @PathVariable Long id) {
+		EmployeePayrollDto employeeWithPayroll = employeeService.getEmployeeWithPayroll(id);
+		return ResponseEntity.status(HttpStatus.OK).body(employeeWithPayroll);
 	}
 
 }

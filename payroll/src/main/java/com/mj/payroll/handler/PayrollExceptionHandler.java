@@ -10,7 +10,7 @@ import com.mj.payroll.exception.PayrollNotFoundException;
 import com.mj.payroll.exception.MissingFieldException;
 
 @RestControllerAdvice
-public class EmployeeExceptionHandler {
+public class PayrollExceptionHandler {
 
 	@ExceptionHandler(PayrollNotFoundException.class)
 	public ResponseEntity<String> handleEmployeeNotFoundException(PayrollNotFoundException exception) {
