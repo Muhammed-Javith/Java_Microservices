@@ -3,9 +3,12 @@ package com.mj.payroll.service;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mj.payroll.controller.PayrollController;
 import com.mj.payroll.entity.Payroll;
 import com.mj.payroll.exception.PayrollAlreadyExistException;
 import com.mj.payroll.exception.PayrollNotFoundException;
@@ -19,6 +22,8 @@ public class PayrollServiceImpl implements PayrollService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+	Logger logger = LoggerFactory.getLogger(PayrollController.class);
 
 	// user payrollDto to payrollentity conversion
 	public Payroll mapToEntity(PayrollDto payrollDto) {
@@ -35,14 +40,16 @@ public class PayrollServiceImpl implements PayrollService {
 	@Override
 	public PayrollDto createPayroll(PayrollDto payrollDto) throws PayrollAlreadyExistException {
 		Optional<Payroll> existingPayroll = this.payrollRepository.findById(payrollDto.getEmployeeId());
-
+		logger.info("Received response from Payroll Service: {}", existingPayroll);
 		if (existingPayroll.isPresent()) {
-			throw new PayrollAlreadyExistException("Payroll Id " + payrollDto.getEmployeeId() + " already exists.");
+			logger.info("Received response from Payroll Service: {}");
+			throw new PayrollAlreadyExistException("Employee Id " + payrollDto.getEmployeeId() + " already exists.");
 		} else {
 			double gross = payrollDto.getHra() + payrollDto.getBasic();
 			payrollDto.setTotalSalary(gross);
 			Payroll payroll = this.mapToEntity(payrollDto);
 			Payroll savedPayroll = this.payrollRepository.save(payroll);
+			logger.info("Received response from Payroll Service: {}", savedPayroll);
 			return this.mapToDto(savedPayroll);
 		}
 	}

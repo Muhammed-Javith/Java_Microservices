@@ -22,13 +22,13 @@ import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.EmployeeNotFoundException;
 import com.mj.employee.exception.MissingFieldException;
 import com.mj.employee.payload.EmployeeDto;
-import com.mj.employee.payload.EmployeePayrollDto;
 import com.mj.employee.service.EmployeeService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
+@Tag(name = "Employee APIs", description = "CRUD operations for employees")
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
@@ -38,7 +38,6 @@ public class EmployeeController {
 	Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Operation(summary = "Create a New Employee")
-	@Tag(name = "Employee APIs", description = "CRUD operations for employees")
 	@PostMapping("/create")
 	public ResponseEntity<?> createEmployee(@RequestBody EmployeeDto employeeDto)
 			throws MissingFieldException, EmployeeAlreadyExistException {
@@ -53,7 +52,6 @@ public class EmployeeController {
 	}
 
 	@Operation(summary = "Get a Employee Details by EmployeeId")
-	@Tag(name = "Employee APIs", description = "CRUD operations for employees")
 	@GetMapping("/get/{id}")
 	public ResponseEntity<?> getEmployeeById(@EmployeeIdParam @PathVariable Long id) throws EmployeeNotFoundException {
 		EmployeeDto employee = employeeService.getEmployeeById(id);
@@ -61,7 +59,6 @@ public class EmployeeController {
 	}
 
 	@Operation(summary = "Get all Employee Details")
-	@Tag(name = "Employee APIs", description = "CRUD operations for employees")
 	@GetMapping("/getall")
 	public ResponseEntity<?> getAllEmployees() {
 		List<EmployeeDto> employees = employeeService.getAllEmployee();
@@ -69,7 +66,6 @@ public class EmployeeController {
 	}
 
 	@Operation(summary = "Update a Employee Details by EmployeeId")
-	@Tag(name = "Employee APIs", description = "CRUD operations for employees")
 	@PutMapping("/update/{id}")
 	public ResponseEntity<?> updateEmployee(@EmployeeIdParam @PathVariable Long id,
 			@RequestBody EmployeeDto employeeDto) throws EmployeeNotFoundException, EmployeeAlreadyExistException {
@@ -78,19 +74,10 @@ public class EmployeeController {
 	}
 
 	@Operation(summary = "Delete a Employee Details by EmployeeId")
-	@Tag(name = "Employee APIs", description = "CRUD operations for employees")
 	@DeleteMapping("/del/{id}")
 	public ResponseEntity<?> deleteEmployee(@EmployeeIdParam @PathVariable Long id) {
 		employeeService.deleteEmployee(id);
 		return ResponseEntity.status(HttpStatus.OK).body("EmpId " + id + " is deleted successfully.");
-	}
-
-	@Operation(summary = "Get a Payroll Details by EmployeeId")
-	@Tag(name = "Microservice APIs", description = "Employee Payroll Microservive API Communication")
-	@GetMapping("/getWithPayroll/{id}")
-	public ResponseEntity<?> getEmployeeWithPayrollById(@EmployeeIdParam @PathVariable Long id) {
-		EmployeePayrollDto employeeWithPayroll = employeeService.getEmployeeWithPayroll(id);
-		return ResponseEntity.status(HttpStatus.OK).body(employeeWithPayroll);
 	}
 
 }

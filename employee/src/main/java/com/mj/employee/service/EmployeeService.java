@@ -3,8 +3,10 @@ package com.mj.employee.service;
 import java.util.List;
 
 import com.mj.employee.exception.EmployeeAlreadyExistException;
+import com.mj.employee.exception.MissingFieldException;
 import com.mj.employee.payload.EmployeeDto;
-import com.mj.employee.payload.EmployeePayrollDto;
+import com.mj.employee.payload.EmployeePayrollRequestDto;
+import com.mj.employee.payload.EmployeePayrollResponseDto;
 
 public interface EmployeeService {
 	EmployeeDto createEmployee(EmployeeDto employeeDto) throws EmployeeAlreadyExistException;
@@ -19,6 +21,9 @@ public interface EmployeeService {
 
 	void deleteEmployee(Long id);
 
-	EmployeePayrollDto getEmployeeWithPayroll(Long id);
+	// EmployeePayrollDto getEmployeeWithPayroll(Long id);
+
+	EmployeePayrollResponseDto createEmployeeWithPayroll(EmployeePayrollRequestDto employeePayrollReqDto)
+			throws EmployeeAlreadyExistException, MissingFieldException;
 
 }

@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeePayrollDto {
-	private Long id;
+public class EmployeePayrollRequestDto {
 	private String name;
 	private String email;
 	private String address;
-	private PayrollDto payrollInfo;
+	private PayrollRequestDto payrollInfo;
 }

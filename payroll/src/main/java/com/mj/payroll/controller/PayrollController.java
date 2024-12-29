@@ -43,7 +43,7 @@ public class PayrollController {
 		}
 		logger.info("Create payroll");
 		PayrollDto createdPayroll = payrollService.createPayroll(payrollDto);
-		logger.info("return response");
+		logger.info("Received response from Payroll Service: {}", createdPayroll);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdPayroll);
 	}
 
