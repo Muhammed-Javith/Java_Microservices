@@ -20,7 +20,7 @@ import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.MissingFieldException;
 import com.mj.employee.payload.EmployeePayrollRequestDto;
 import com.mj.employee.payload.EmployeePayrollResponseDto;
-import com.mj.employee.service.EmployeeService;
+import com.mj.employee.service.EmpPayrollService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +31,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class EmployeePayrollController {
 
 	@Autowired
-	private EmployeeService employeeService;
+	private EmpPayrollService empPayrollService;
 
 	Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
 
@@ -43,7 +43,7 @@ public class EmployeePayrollController {
 				|| !StringUtils.hasText(employeePayrollReqDto.getEmail())) {
 			throw new MissingFieldException("Please enter all Employee details to proceed");
 		}
-		EmployeePayrollResponseDto employeeWithPayroll = employeeService
+		EmployeePayrollResponseDto employeeWithPayroll = empPayrollService
 				.createEmployeeWithPayroll(employeePayrollReqDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(employeeWithPayroll);
 	}
@@ -51,7 +51,7 @@ public class EmployeePayrollController {
 	@Operation(summary = "Get a Employee with Payroll Details by EmployeeId")
 	@GetMapping("/getWithPayroll/{id}")
 	public ResponseEntity<?> getEmployeeWithPayrollById(@EmployeeIdParam @PathVariable Long id) {
-		EmployeePayrollResponseDto employeeWithPayroll = employeeService.getEmployeeWithPayroll(id);
+		EmployeePayrollResponseDto employeeWithPayroll = empPayrollService.getEmployeeWithPayroll(id);
 		return ResponseEntity.status(HttpStatus.OK).body(employeeWithPayroll);
 	}
 
@@ -59,7 +59,7 @@ public class EmployeePayrollController {
 	@PutMapping("/updateWithPayroll/{id}")
 	public ResponseEntity<?> updateEmployee(@EmployeeIdParam @PathVariable Long id,
 			@RequestBody EmployeePayrollRequestDto employeePayrollReqDto) throws EmployeeAlreadyExistException {
-		EmployeePayrollResponseDto updatedEmployee = employeeService.updateEmployeeWithPayroll(id,
+		EmployeePayrollResponseDto updatedEmployee = empPayrollService.updateEmployeeWithPayroll(id,
 				employeePayrollReqDto);
 		return ResponseEntity.status(HttpStatus.OK).body(updatedEmployee);
 	}
@@ -67,7 +67,7 @@ public class EmployeePayrollController {
 	@Operation(summary = "Delete a Employee with Payroll Details by EmployeeId")
 	@DeleteMapping("/deleteWithPayroll/{id}")
 	public ResponseEntity<?> deleteEmployeeWithPayroll(@EmployeeIdParam @PathVariable Long id) {
-		employeeService.deleteEmployeeWithPayroll(id);
+		empPayrollService.deleteEmployeeWithPayroll(id);
 		return ResponseEntity.status(HttpStatus.OK).body("EmpId " + id + " is deleted successfully.");
 	}
 }
