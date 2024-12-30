@@ -34,7 +34,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"mjazvith\",\r\n    \"email\":\"svgvfg@gmail.com\",\r\n    \"address\":\"India\"\r\n}",
+					"raw": "{\r\n    \"name\": \"ravi\",\r\n    \"email\":\"ravi@gmail.com\",\r\n    \"address\":\"India\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -59,11 +59,23 @@
 		},
 		{
 			"name": "get one Employee",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:8080/api/employees/get/15",
+					"raw": "http://localhost:8080/api/employees/get/8",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -73,7 +85,7 @@
 						"api",
 						"employees",
 						"get",
-						"15"
+						"8"
 					]
 				}
 			},
@@ -86,7 +98,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Ragav\",\r\n    \"email\":\"Ragavinini@gmail.com\",\r\n    \"address\":\"UAE\"\r\n}",
+					"raw": "{\r\n    \"name\": \"Ragav\",\r\n    \"email\":\"Ragavin@gmail.com\",\r\n    \"address\":\"UAE\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -94,7 +106,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/employees/update/18",
+					"raw": "http://localhost:8080/api/employees/update/8",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -104,7 +116,7 @@
 						"api",
 						"employees",
 						"update",
-						"18"
+						"8"
 					]
 				}
 			},
@@ -116,7 +128,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/employees/del/17",
+					"raw": "http://localhost:8080/api/employees/del/8",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -126,7 +138,7 @@
 						"api",
 						"employees",
 						"del",
-						"17"
+						"8"
 					]
 				}
 			},
