@@ -21,9 +21,13 @@ public interface EmployeeService {
 
 	void deleteEmployee(Long id);
 
-	// EmployeePayrollDto getEmployeeWithPayroll(Long id);
-
 	EmployeePayrollResponseDto createEmployeeWithPayroll(EmployeePayrollRequestDto employeePayrollReqDto)
 			throws EmployeeAlreadyExistException, MissingFieldException;
+	
+	EmployeePayrollResponseDto getEmployeeWithPayroll(Long id);
+	
+	EmployeePayrollResponseDto updateEmployeeWithPayroll(Long id, EmployeePayrollRequestDto employeePayrollReqDto) throws EmployeeAlreadyExistException;
+
+	void deleteEmployeeWithPayroll(Long id);
 
 }

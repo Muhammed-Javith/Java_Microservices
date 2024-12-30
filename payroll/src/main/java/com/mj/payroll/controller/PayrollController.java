@@ -69,7 +69,7 @@ public class PayrollController {
 	@DeleteMapping("/del/{id}")
 	public ResponseEntity<?> deletePayroll(@EmployeeIdParam @PathVariable Long id) {
 		payrollService.deletePayroll(id);
-		return ResponseEntity.status(HttpStatus.OK).body("Payroll with ID " + id + " is deleted successfully.");
+		return ResponseEntity.status(HttpStatus.OK).body("Payroll Employee with ID " + id + " is deleted successfully.");
 	}
 
 }
