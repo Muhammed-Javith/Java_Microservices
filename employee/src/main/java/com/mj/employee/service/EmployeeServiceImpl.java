@@ -114,10 +114,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public EmployeePayrollResponseDto createEmployeeWithPayroll(EmployeePayrollRequestDto employeePayrollReqDto)
 			throws EmployeeAlreadyExistException, MissingFieldException {
-		
+
 		EmployeeDto employeeDto = modelMapper.map(employeePayrollReqDto, EmployeeDto.class);
 		EmployeeDto createdEmployee = createEmployee(employeeDto);
-		
+
 		EmployeePayrollResponseDto employeePayrollResponseDto = modelMapper.map(createdEmployee,
 				EmployeePayrollResponseDto.class);
 
@@ -125,15 +125,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 		payrollRequestDto.setEmployeeId(createdEmployee.getId());
 
 		try {
-			String payrollCreateUrl = payrollServiceUrl + "create/"; 
-			PayrollResponseDto payrollResDto = restTemplate.postForObject(payrollCreateUrl, payrollRequestDto,
-					PayrollResponseDto.class);
+			PayrollResponseDto payrollResDto = restTemplate.postForObject(payrollServiceUrl + "create",
+					payrollRequestDto, PayrollResponseDto.class);
 			logger.info("Received response from Payroll Service: {}", payrollResDto);
 			employeePayrollResponseDto.setPayrollInfo(payrollResDto);
 			return employeePayrollResponseDto;
 		} catch (HttpClientErrorException.BadRequest ex) {
+			deleteEmployee(createdEmployee.getId());
 			throw new MissingFieldException("Please enter all payroll details to proceed with the request");
 		} catch (HttpClientErrorException.Conflict ex) {
+			deleteEmployee(createdEmployee.getId());
 			throw new EmployeeAlreadyExistException(
 					"Payroll details for Employee ID" + createdEmployee.getId() + " is already exist");
 		}
@@ -159,21 +160,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public EmployeePayrollResponseDto updateEmployeeWithPayroll(Long id,
 			EmployeePayrollRequestDto employeePayrollReqDto) throws EmployeeAlreadyExistException {
-		//Employee employee = modelMapper.map(employeePayrollReqDto, Employee.class);
 		EmployeeDto employeeDto = modelMapper.map(employeePayrollReqDto, EmployeeDto.class);
-		//EmployeeDto employeeDto = this.mapToDto(employee);
 		EmployeeDto updatedEmployee = updateEmployee(employeeDto, id);
 		EmployeePayrollResponseDto employeePayrollResponseDto = modelMapper.map(updatedEmployee,
 				EmployeePayrollResponseDto.class);
 		PayrollRequestDto payrollRequestDto = employeePayrollReqDto.getPayrollInfo();
 		try {
 			String payrollUpdateUrl = payrollServiceUrl + "update/" + id; // URL for MS2 (no employeeId in the path now)
-            PayrollResponseDto payrollResDto = restTemplate.exchange(payrollUpdateUrl, HttpMethod.PUT, new HttpEntity<>(payrollRequestDto), PayrollResponseDto.class).getBody();
-            logger.info("Received response from Payroll Service: {}", payrollResDto);
-            employeePayrollResponseDto.setPayrollInfo(payrollResDto);
-            return employeePayrollResponseDto;
-		}catch(HttpClientErrorException.NotFound ex) {
-			//throw new EmployeeNotFoundException("Payroll details not found for Employee ID: " + id);
+			PayrollResponseDto payrollResDto = restTemplate.exchange(payrollUpdateUrl, HttpMethod.PUT,
+					new HttpEntity<>(payrollRequestDto), PayrollResponseDto.class).getBody();
+			logger.info("Received response from Payroll Service: {}", payrollResDto);
+			employeePayrollResponseDto.setPayrollInfo(payrollResDto);
+			return employeePayrollResponseDto;
+		} catch (HttpClientErrorException.NotFound ex) {
+			// throw new EmployeeNotFoundException("Payroll details not found for Employee
+			// ID: " + id);
 			throw new EmployeeNotFoundException(ex.getMessage());
 		}
 	}

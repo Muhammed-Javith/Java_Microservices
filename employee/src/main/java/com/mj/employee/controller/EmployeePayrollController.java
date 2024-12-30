@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,9 +37,14 @@ public class EmployeePayrollController {
 
 	@Operation(summary = "Create Employee with Payroll")
 	@PostMapping("/createWithPayroll")
-	public ResponseEntity<?> createEmployeeWithPayroll(@RequestBody EmployeePayrollRequestDto employeePayrollDto)
+	public ResponseEntity<?> createEmployeeWithPayroll(@RequestBody EmployeePayrollRequestDto employeePayrollReqDto)
 			throws EmployeeAlreadyExistException, MissingFieldException {
-		EmployeePayrollResponseDto employeeWithPayroll = employeeService.createEmployeeWithPayroll(employeePayrollDto);
+		if (!StringUtils.hasText(employeePayrollReqDto.getName())
+				|| !StringUtils.hasText(employeePayrollReqDto.getEmail())) {
+			throw new MissingFieldException("Please enter all Employee details to proceed");
+		}
+		EmployeePayrollResponseDto employeeWithPayroll = employeeService
+				.createEmployeeWithPayroll(employeePayrollReqDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(employeeWithPayroll);
 	}
 
