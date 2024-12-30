@@ -74,9 +74,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new EmployeeAlreadyExistException(
 					"Employee email " + employeeDto.getEmail() + " already used by another Employee");
 		}
-		updateEmployee.setName(employeeDto.getName());
-		updateEmployee.setEmail(employeeDto.getEmail());
-		updateEmployee.setAddress(employeeDto.getAddress());
+		updateEmployee = this.mapToEntity(employeeDto);
+		updateEmployee.setId(id);
+//		updateEmployee.setName(employeeDto.getName());
+//		updateEmployee.setEmail(employeeDto.getEmail());
+//		updateEmployee.setAddress(employeeDto.getAddress());
 		Employee updatedEmployee = this.employeeRepository.save(updateEmployee);
 		return this.mapToDto(updatedEmployee);
 	}
