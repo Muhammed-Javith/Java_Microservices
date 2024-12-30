@@ -1,4 +1,4 @@
-package com.mj.payroll.service;
+package com.mj.payroll.service.Impl;
 
 import java.util.Optional;
 
@@ -14,6 +14,7 @@ import com.mj.payroll.exception.PayrollAlreadyExistException;
 import com.mj.payroll.exception.PayrollNotFoundException;
 import com.mj.payroll.payload.PayrollDto;
 import com.mj.payroll.repository.PayrollRepository;
+import com.mj.payroll.service.PayrollService;
 
 @Service
 public class PayrollServiceImpl implements PayrollService {
@@ -65,8 +66,8 @@ public class PayrollServiceImpl implements PayrollService {
 	public PayrollDto updatePayroll(PayrollDto payrollDto, Long id) throws PayrollAlreadyExistException {
 		Payroll updatePayroll = this.payrollRepository.findById(id)
 				.orElseThrow(() -> new PayrollNotFoundException("Payroll id " + id + " is not found with Id"));
-		updatePayroll.setHra(payrollDto.getHra());
-		updatePayroll.setBasic(payrollDto.getBasic());
+		updatePayroll = this.mapToEntity(payrollDto);
+		updatePayroll.setEmployeeId(id);
 		updatePayroll.setTotalSalary(payrollDto.getHra() + payrollDto.getBasic());
 		Payroll updatedPayroll = this.payrollRepository.save(updatePayroll);
 		return this.mapToDto(updatedPayroll);
