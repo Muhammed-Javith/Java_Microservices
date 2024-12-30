@@ -41,7 +41,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "Create EmployePayroll",
 			"request": {
 				"method": "POST",
 				"header": [],
