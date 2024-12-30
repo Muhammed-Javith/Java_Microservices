@@ -24,7 +24,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/employees/getWithPayroll/4",
+					"raw": "http://localhost:8080/api/employees/getWithPayroll/7",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -34,7 +34,7 @@
 						"api",
 						"employees",
 						"getWithPayroll",
-						"4"
+						"7"
 					]
 				}
 			},
@@ -47,7 +47,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "{\r\n  \"name\": \"raja\",\r\n  \"email\": \"raja.a@gmail.com\",\r\n  \"address\": \"India\",\r\n  \"payrollInfo\": {\r\n    \"hra\": 48000,\r\n    \"basic\": 22000\r\n  }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -77,7 +77,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"mjavira\",\r\n  \"email\": \"mj@gm.com\",\r\n  \"address\": \"UAE\",\r\n  \"payrollInfo\": {\r\n    \"hra\": 20000,\r\n    \"basic\": 25000\r\n  }\r\n}",
+					"raw": "{\r\n  \"name\": \"mjavira\",\r\n  \"email\": \"'mjavith@gmail.com'\",\r\n  \"address\": \"UAE\",\r\n  \"payrollInfo\": {\r\n    \"hra\": 20000,\r\n    \"basic\": 25000\r\n  }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -85,7 +85,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/employees/updateWithPayroll/4",
+					"raw": "http://localhost:8080/api/employees/updateWithPayroll/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -95,7 +95,7 @@
 						"api",
 						"employees",
 						"updateWithPayroll",
-						"4"
+						"1"
 					]
 				}
 			},
