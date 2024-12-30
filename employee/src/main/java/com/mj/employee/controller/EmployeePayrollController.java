@@ -58,7 +58,7 @@ public class EmployeePayrollController {
 	@Operation(summary = "Update a Employee with Payroll Details by EmployeeId")
 	@PutMapping("/updateWithPayroll/{id}")
 	public ResponseEntity<?> updateEmployee(@EmployeeIdParam @PathVariable Long id,
-			@RequestBody EmployeePayrollRequestDto employeePayrollReqDto) throws EmployeeAlreadyExistException {
+			@RequestBody EmployeePayrollRequestDto employeePayrollReqDto) throws EmployeeAlreadyExistException, MissingFieldException {
 		EmployeePayrollResponseDto updatedEmployee = empPayrollService.updateEmployeeWithPayroll(id,
 				employeePayrollReqDto);
 		return ResponseEntity.status(HttpStatus.OK).body(updatedEmployee);

@@ -13,7 +13,7 @@ public interface EmpPayrollService {
 	EmployeePayrollResponseDto getEmployeeWithPayroll(Long id);
 
 	EmployeePayrollResponseDto updateEmployeeWithPayroll(Long id, EmployeePayrollRequestDto employeePayrollReqDto)
-			throws EmployeeAlreadyExistException;
+			throws EmployeeAlreadyExistException, MissingFieldException;
 
 	void deleteEmployeeWithPayroll(Long id);
 

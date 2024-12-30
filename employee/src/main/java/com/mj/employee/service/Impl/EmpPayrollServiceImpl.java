@@ -93,7 +93,7 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 
 	@Override
 	public EmployeePayrollResponseDto updateEmployeeWithPayroll(Long id,
-			EmployeePayrollRequestDto employeePayrollReqDto) throws EmployeeAlreadyExistException {
+			EmployeePayrollRequestDto employeePayrollReqDto) throws EmployeeAlreadyExistException, MissingFieldException {
 		EmployeeDto employeeDto = modelMapper.map(employeePayrollReqDto, EmployeeDto.class);
 		EmployeeDto updatedEmployee = employeeService.updateEmployee(employeeDto, id);
 		EmployeePayrollResponseDto employeePayrollResponseDto = modelMapper.map(updatedEmployee,
@@ -108,6 +108,8 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 			return employeePayrollResponseDto;
 		} catch (HttpClientErrorException.NotFound ex) {
 			throw new EmployeeNotFoundException("Payroll details not found forEmployeeID:" + id);
+		} catch (HttpClientErrorException.BadRequest ex) {
+			throw new MissingFieldException("Please enter all valid payroll details to proceed with the request");
 		}
 	}
 

@@ -59,7 +59,10 @@ public class PayrollController {
 	@Tag(name = "Payroll APIs", description = "CRUD operations for payrolls")
 	@PutMapping("/update/{id}")
 	public ResponseEntity<?> updatePayroll(@EmployeeIdParam @PathVariable Long id, @RequestBody PayrollDto payrollDto)
-			throws PayrollNotFoundException, PayrollAlreadyExistException {
+			throws PayrollNotFoundException, PayrollAlreadyExistException, MissingFieldException {
+		if (payrollDto.getHra() <= 0 || payrollDto.getBasic() <= 0) {
+			throw new MissingFieldException("Please enter all details to proceed");
+		}
 		PayrollDto updatedPayroll = payrollService.updatePayroll(payrollDto, id);
 		return ResponseEntity.status(HttpStatus.OK).body(updatedPayroll);
 	}
