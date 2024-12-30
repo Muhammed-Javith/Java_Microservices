@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PayrollRequestDto {
-	// private Long employeeId;
+	private Long employeeId;
 	private double hra;
 	private double basic;
 

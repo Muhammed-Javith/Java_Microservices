@@ -114,21 +114,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public EmployeePayrollResponseDto createEmployeeWithPayroll(EmployeePayrollRequestDto employeePayrollReqDto)
 			throws EmployeeAlreadyExistException, MissingFieldException {
-
-		Employee employee = modelMapper.map(employeePayrollReqDto, Employee.class);
-		EmployeeDto createdEmployee = createEmployee(this.mapToDto(employee));
-
+		
+		EmployeeDto employeeDto = modelMapper.map(employeePayrollReqDto, EmployeeDto.class);
+		EmployeeDto createdEmployee = createEmployee(employeeDto);
+		
 		EmployeePayrollResponseDto employeePayrollResponseDto = modelMapper.map(createdEmployee,
 				EmployeePayrollResponseDto.class);
 
 		PayrollRequestDto payrollRequestDto = employeePayrollReqDto.getPayrollInfo();
-		//payrollRequestDto.setEmployeeId(Long.valueOf(createdEmployee.getId()));
+		payrollRequestDto.setEmployeeId(createdEmployee.getId());
 
 		try {
-			String payrollCreateUrl = payrollServiceUrl + "create/"; // URL for MS2 (no employeeId in the path now)
+			String payrollCreateUrl = payrollServiceUrl + "create/"; 
 			PayrollResponseDto payrollResDto = restTemplate.postForObject(payrollCreateUrl, payrollRequestDto,
 					PayrollResponseDto.class);
-			logger.info("Received response from Payroll Service: {}", employeePayrollResponseDto);
+			logger.info("Received response from Payroll Service: {}", payrollResDto);
 			employeePayrollResponseDto.setPayrollInfo(payrollResDto);
 			return employeePayrollResponseDto;
 		} catch (HttpClientErrorException.BadRequest ex) {
