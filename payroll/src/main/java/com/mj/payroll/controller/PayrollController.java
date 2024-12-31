@@ -39,7 +39,7 @@ public class PayrollController {
 			throws MissingFieldException, PayrollAlreadyExistException {
 		logger.info("Received request to create payroll and validating fields here");
 		if (payrollDto.getEmployeeId() == null || payrollDto.getHra() <= 0 || payrollDto.getBasic() <= 0) {
-			throw new MissingFieldException("Please enter all details to proceed");
+			throw new MissingFieldException("Please enter all Payroll details to proceed");
 		}
 		logger.info("Create payroll");
 		PayrollDto createdPayroll = payrollService.createPayroll(payrollDto);

@@ -1,29 +1,38 @@
 package com.mj.payroll.handler;
 
+import java.time.LocalDateTime;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.mj.payroll.exception.MissingFieldException;
 import com.mj.payroll.exception.PayrollAlreadyExistException;
 import com.mj.payroll.exception.PayrollNotFoundException;
-import com.mj.payroll.exception.MissingFieldException;
+import com.mj.payroll.payload.ErrorResponse;
 
 @RestControllerAdvice
 public class PayrollExceptionHandler {
 
 	@ExceptionHandler(PayrollNotFoundException.class)
-	public ResponseEntity<String> handleEmployeeNotFoundException(PayrollNotFoundException exception) {
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+	public ResponseEntity<ErrorResponse> handlePayrollNotFoundException(PayrollNotFoundException exception) {
+		return buildErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(MissingFieldException.class)
-	public ResponseEntity<String> handleMissingFieldException(MissingFieldException exception) {
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ErrorResponse> handleMissingFieldException(MissingFieldException exception) {
+		return buildErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(PayrollAlreadyExistException.class)
-	public ResponseEntity<String> handleEmailConflictException(PayrollAlreadyExistException ex) {
-		return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+	public ResponseEntity<ErrorResponse> handleEmailConflictException(PayrollAlreadyExistException exception) {
+		return buildErrorResponse(exception.getMessage(), HttpStatus.CONFLICT);
+	}
+
+	private ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status) {
+		ErrorResponse errorResponse = new ErrorResponse(status.value(), status.getReasonPhrase(), message,
+				LocalDateTime.now().toString());
+		return new ResponseEntity<>(errorResponse, status);
 	}
 }

@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import com.mj.employee.config.PayrollClient;
 import com.mj.employee.controller.EmployeePayrollController;
@@ -65,11 +64,10 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 			return employeePayrollResponseDto;
 		} catch (FeignException.BadRequest ex) {
 			employeeService.deleteEmployee(createdEmployee.getId());
-			throw new MissingFieldException("Please enter all payroll details to proceed with the request");
+			throw new MissingFieldException(ex.contentUTF8());
 		} catch (FeignException.Conflict ex) {
 			employeeService.deleteEmployee(createdEmployee.getId());
-			throw new EmployeeAlreadyExistException(
-					"Payroll details for Employee ID" + createdEmployee.getId() + " is already exist");
+			throw new EmployeeAlreadyExistException(ex.contentUTF8());
 		}
 	}
 
@@ -104,9 +102,9 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 			employeePayrollResponseDto.setPayrollInfo(payrollResDto);
 			return employeePayrollResponseDto;
 		} catch (FeignException.NotFound ex) {
-			throw new EmployeeNotFoundException("Payroll details not found forEmployeeID:" + id);
+			throw new EmployeeNotFoundException(ex.contentUTF8());
 		} catch (FeignException.BadRequest ex) {
-			throw new MissingFieldException("Please enter all valid payroll details to proceed with the request");
+			throw new MissingFieldException(ex.contentUTF8());
 		}
 	}
 
@@ -121,7 +119,7 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 			logger.info("Successfully deleted employee with ID: {}", id);
 		} catch (FeignException.NotFound ex) {
 			logger.error("Payroll not found for employee ID: {}", id);
-			throw new EmployeeNotFoundException("Payroll details not found forEmployeeID:" + id);
+			throw new EmployeeNotFoundException(ex.contentUTF8());
 		}
 	}
 

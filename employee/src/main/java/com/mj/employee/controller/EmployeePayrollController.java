@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @Tag(name = "Microservice APIs", description = "Employee Payroll Microservive API Communication")
-@RequestMapping("/api/employees")
+@RequestMapping("/api/employee/salary")
 public class EmployeePayrollController {
 
 	@Autowired
@@ -36,7 +36,7 @@ public class EmployeePayrollController {
 	Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
 
 	@Operation(summary = "Create Employee with Payroll")
-	@PostMapping("/createWithPayroll")
+	@PostMapping("/create")
 	public ResponseEntity<?> createEmployeeWithPayroll(@RequestBody EmployeePayrollRequestDto employeePayrollReqDto)
 			throws EmployeeAlreadyExistException, MissingFieldException {
 		if (!StringUtils.hasText(employeePayrollReqDto.getName())
@@ -49,14 +49,14 @@ public class EmployeePayrollController {
 	}
 
 	@Operation(summary = "Get a Employee with Payroll Details by EmployeeId")
-	@GetMapping("/getWithPayroll/{id}")
+	@GetMapping("/get/{id}")
 	public ResponseEntity<?> getEmployeeWithPayrollById(@EmployeeIdParam @PathVariable Long id) {
 		EmployeePayrollResponseDto employeeWithPayroll = empPayrollService.getEmployeeWithPayroll(id);
 		return ResponseEntity.status(HttpStatus.OK).body(employeeWithPayroll);
 	}
 
 	@Operation(summary = "Update a Employee with Payroll Details by EmployeeId")
-	@PutMapping("/updateWithPayroll/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<?> updateEmployee(@EmployeeIdParam @PathVariable Long id,
 			@RequestBody EmployeePayrollRequestDto employeePayrollReqDto)
 			throws EmployeeAlreadyExistException, MissingFieldException {
@@ -66,7 +66,7 @@ public class EmployeePayrollController {
 	}
 
 	@Operation(summary = "Delete a Employee with Payroll Details by EmployeeId")
-	@DeleteMapping("/deleteWithPayroll/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteEmployeeWithPayroll(@EmployeeIdParam @PathVariable Long id) {
 		empPayrollService.deleteEmployeeWithPayroll(id);
 		return ResponseEntity.status(HttpStatus.OK).body("EmpId " + id + " is deleted successfully.");

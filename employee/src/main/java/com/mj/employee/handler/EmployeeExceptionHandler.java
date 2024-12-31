@@ -1,29 +1,61 @@
 package com.mj.employee.handler;
 
+import java.time.LocalDateTime;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.EmployeeNotFoundException;
 import com.mj.employee.exception.MissingFieldException;
+import com.mj.employee.payload.ErrorResponse;
 
 @RestControllerAdvice
 public class EmployeeExceptionHandler {
 
-	@ExceptionHandler(EmployeeNotFoundException.class)
-	public ResponseEntity<String> handleEmployeeNotFoundException(EmployeeNotFoundException exception) {
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
+	@ExceptionHandler({ EmployeeNotFoundException.class, MissingFieldException.class,
+			EmployeeAlreadyExistException.class })
+	public ResponseEntity<ErrorResponse> handleExceptions(Exception exception) {
+		HttpStatus status = getStatusFromException(exception);
+		String message = exception.getMessage();
+		return buildErrorResponse(message, status);
 	}
 
-	@ExceptionHandler(MissingFieldException.class)
-	public ResponseEntity<String> handleMissingFieldException(MissingFieldException exception) {
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+	private HttpStatus getStatusFromException(Exception exception) {
+		if (exception instanceof EmployeeNotFoundException) {
+			return HttpStatus.NOT_FOUND;
+		} else if (exception instanceof MissingFieldException) {
+			return HttpStatus.BAD_REQUEST;
+		} else if (exception instanceof EmployeeAlreadyExistException) {
+			return HttpStatus.CONFLICT;
+		}
+		return HttpStatus.INTERNAL_SERVER_ERROR; // Default status
 	}
 
-	@ExceptionHandler(EmployeeAlreadyExistException.class)
-	public ResponseEntity<String> handleEmailConflictException(EmployeeAlreadyExistException ex) {
-		return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+	private ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status) {
+		String extractedMessage = extractErrorMessage(message);
+		ErrorResponse errorResponse = new ErrorResponse(status.value(), status.getReasonPhrase(), extractedMessage,
+				LocalDateTime.now().toString());
+		return new ResponseEntity<>(errorResponse, status);
+	}
+
+	private String extractErrorMessage(String jsonString) {
+		try {
+			JsonNode rootNode = objectMapper.readTree(jsonString);
+			JsonNode errorMessageNode = rootNode.get("errorMessage"); // Extract the errorMessage node
+			if (errorMessageNode != null) {
+				return errorMessageNode.asText(); // Return the error message text
+			}
+		} catch (Exception e) {
+			// Fallback to a default message if JSON parsing fails
+			return "Some issues with response from MicroService 2";
+		}
+		return "Some issue with MS2"; // Fallback if errorMessage is not found
 	}
 }
