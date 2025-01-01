@@ -7,6 +7,9 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.mj.employee.controller.EmployeeController;
@@ -52,6 +55,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 	}
 
+	@Cacheable(value = "employees", key = "#id")
 	@Override
 	public EmployeeDto getEmployeeById(Long id) {
 		Employee employee = this.employeeRepository.findById(id)
@@ -65,6 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return employees.stream().map(employee -> this.mapToDto(employee)).collect(Collectors.toList());
 	}
 
+	@CachePut(value = "employees", key = "#employee.id")
 	@Override
 	public EmployeeDto updateEmployee(EmployeeDto employeeDto, Long id) throws EmployeeAlreadyExistException {
 		Employee updateEmployee = this.employeeRepository.findById(id)
@@ -76,13 +81,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		updateEmployee = this.mapToEntity(employeeDto);
 		updateEmployee.setId(id);
-//		updateEmployee.setName(employeeDto.getName());
-//		updateEmployee.setEmail(employeeDto.getEmail());
-//		updateEmployee.setAddress(employeeDto.getAddress());
 		Employee updatedEmployee = this.employeeRepository.save(updateEmployee);
 		return this.mapToDto(updatedEmployee);
 	}
 
+	@CacheEvict(value = "employees", key = "#id")
 	@Override
 	public void deleteEmployee(Long id) throws EmployeeNotFoundException {
 		Employee employee = this.employeeRepository.findById(id)
