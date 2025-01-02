@@ -5,9 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.mj.employee.config.PayrollClient;
@@ -74,7 +71,6 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 		}
 	}
 
-	@Cacheable(value = "payroll", key = "#id")
 	@Override
 	public EmployeePayrollResponseDto getEmployeeWithPayroll(Long id) {
 		Employee employee = this.employeeRepository.findById(id)
@@ -91,7 +87,6 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 		return empPayrollResDto;
 	}
 
-	@CachePut(value = "payroll", key = "#id")
 	@Override
 	public EmployeePayrollResponseDto updateEmployeeWithPayroll(Long id,
 			EmployeePayrollRequestDto employeePayrollReqDto)
@@ -113,7 +108,6 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 		}
 	}
 
-	@CacheEvict(value = "payroll", key = "#id")
 	@Override
 	public void deleteEmployeeWithPayroll(Long id) {
 		Employee employee = this.employeeRepository.findById(id)

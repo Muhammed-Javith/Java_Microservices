@@ -6,6 +6,9 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.mj.payroll.controller.PayrollController;
@@ -55,6 +58,7 @@ public class PayrollServiceImpl implements PayrollService {
 		}
 	}
 
+	@Cacheable(value = "payroll", key = "#id")
 	@Override
 	public PayrollDto getPayrollByEmployeeId(Long id) {
 		Payroll payroll = this.payrollRepository.findById(id)
@@ -62,6 +66,7 @@ public class PayrollServiceImpl implements PayrollService {
 		return this.mapToDto(payroll);
 	}
 
+	@CachePut(value = "payroll", key = "#id")
 	@Override
 	public PayrollDto updatePayroll(PayrollDto payrollDto, Long id) throws PayrollAlreadyExistException {
 		Payroll updatePayroll = this.payrollRepository.findById(id)
@@ -73,6 +78,7 @@ public class PayrollServiceImpl implements PayrollService {
 		return this.mapToDto(updatedPayroll);
 	}
 
+	@CacheEvict(value = "payroll", key = "#id")
 	@Override
 	public void deletePayroll(Long id) throws PayrollNotFoundException {
 		Payroll payroll = this.payrollRepository.findById(id)
