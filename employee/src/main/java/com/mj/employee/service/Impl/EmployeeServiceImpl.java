@@ -69,7 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return employees.stream().map(employee -> this.mapToDto(employee)).collect(Collectors.toList());
 	}
 
-	@CachePut(value = "employees", key = "#employee.id")
+	@CachePut(value = "employees", key = "#id")
 	@Override
 	public EmployeeDto updateEmployee(EmployeeDto employeeDto, Long id) throws EmployeeAlreadyExistException {
 		Employee updateEmployee = this.employeeRepository.findById(id)

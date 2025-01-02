@@ -39,10 +39,20 @@ public class EmployeeExceptionHandler {
 	}
 
 	private ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status) {
-		String extractedMessage = extractErrorMessage(message);
-		ErrorResponse errorResponse = new ErrorResponse(status.value(), status.getReasonPhrase(), extractedMessage,
-				LocalDateTime.now().toString());
+		// Check if the message is a JSON string
+		String extractedMessage = isJsonString(message) ? extractErrorMessage(message) : message;
+		ErrorResponse errorResponse = new ErrorResponse(status.value(), extractedMessage,
+				LocalDateTime.now().toString(), status.getReasonPhrase());
 		return new ResponseEntity<>(errorResponse, status);
+	}
+
+	private boolean isJsonString(String message) {
+		try {
+			objectMapper.readTree(message); // Try parsing as JSON
+			return true;
+		} catch (Exception e) {
+			return false; // If parsing fails, it's not a JSON string
+		}
 	}
 
 	private String extractErrorMessage(String jsonString) {

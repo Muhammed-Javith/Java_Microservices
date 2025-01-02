@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ErrorResponse {
 
-	private int statusCode;
-	private String StatusMessage;
-	private String errorMessage;
+	private int status;
+	private String message;
 	private String timeStamp;
+	private String error;
 
 }
