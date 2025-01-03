@@ -17,7 +17,7 @@ public class SwaggerDocConfig {
 	@Bean
 	public OpenAPI openAPI() {
 		Server server = new Server();
-		server.setUrl("http://localhost:8081");
+		server.setUrl("http://localhost:8082");
 		server.setDescription("Development");
 
 		Contact myContact = new Contact();
