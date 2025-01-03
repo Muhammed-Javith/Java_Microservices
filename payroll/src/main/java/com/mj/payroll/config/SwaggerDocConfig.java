@@ -26,7 +26,7 @@ public class SwaggerDocConfig {
 		myContact.setUrl("https://www.linkedin.com/in/muhammedjavith-sde/");
 
 		Info information = new Info().title("Payroll Management System API").version("v1.0")
-				.description("This API exposes endpoints to manage  Employee_Payroll Microservice.").contact(myContact)
+				.description("This API exposes endpoints to manage  Payroll Microservice.").contact(myContact)
 				.termsOfService("https://swagger.io/docs/")
 				.license(new License().name("Apache 2.0").url("http://springdoc.org"));
 

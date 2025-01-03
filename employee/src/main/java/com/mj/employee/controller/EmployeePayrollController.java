@@ -1,5 +1,7 @@
 package com.mj.employee.controller;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +71,7 @@ public class EmployeePayrollController {
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteEmployeeWithPayroll(@EmployeeIdParam @PathVariable Long id) {
 		empPayrollService.deleteEmployeeWithPayroll(id);
-		return ResponseEntity.status(HttpStatus.OK).body("EmpId " + id + " is deleted successfully.");
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(Map.of("message", "EmpId " + id + " is deleted successfully."));
 	}
 }

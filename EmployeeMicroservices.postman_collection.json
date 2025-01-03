@@ -12,12 +12,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/employees/getall",
+					"raw": "http://localhost:8081/api/employees/getall",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8081",
 					"path": [
 						"api",
 						"employees",
@@ -34,7 +34,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"ravi\",\r\n    \"email\":\"ravi@gmail.com\",\r\n    \"address\":\"India\"\r\n}",
+					"raw": "{\r\n    \"name\": \"ravi\",\r\n    \"email\":\"ravdfi@gmail.com\",\r\n    \"address\":\"India\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -42,12 +42,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/employees/create",
+					"raw": "http://localhost:8081/api/employees/create",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8081",
 					"path": [
 						"api",
 						"employees",
@@ -75,17 +75,17 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/employees/get/8",
+					"raw": "http://localhost:8081/api/employees/get/23",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8081",
 					"path": [
 						"api",
 						"employees",
 						"get",
-						"8"
+						"23"
 					]
 				}
 			},
@@ -98,7 +98,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Ragav\",\r\n    \"email\":\"Ragavin@gmail.com\",\r\n    \"address\":\"UAE\"\r\n}",
+					"raw": "{\r\n    \"name\": \"ravi\",\r\n    \"email\":\"raviasls@gmail.com\",\r\n    \"address\":\"India\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -106,17 +106,17 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/employees/update/8",
+					"raw": "http://localhost:8081/api/employees/update/24",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8081",
 					"path": [
 						"api",
 						"employees",
 						"update",
-						"8"
+						"24"
 					]
 				}
 			},
@@ -128,17 +128,17 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/employees/del/8",
+					"raw": "http://localhost:8081/api/employees/del/24",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8081",
 					"path": [
 						"api",
 						"employees",
 						"del",
-						"8"
+						"24"
 					]
 				}
 			},

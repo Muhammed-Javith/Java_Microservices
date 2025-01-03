@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.mj.employee.payload.PayrollRequestDto;
 import com.mj.employee.payload.PayrollResponseDto;
 
-@FeignClient(name = "payroll-service", url = "${payroll.service.url}")
+@FeignClient(name = "payroll",  path = "/api/payroll")
 public interface PayrollClient {
 
 	@PostMapping("create")

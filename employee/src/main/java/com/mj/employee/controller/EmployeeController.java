@@ -1,6 +1,7 @@
 package com.mj.employee.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +78,8 @@ public class EmployeeController {
 	@DeleteMapping("/del/{id}")
 	public ResponseEntity<?> deleteEmployee(@EmployeeIdParam @PathVariable Long id) {
 		employeeService.deleteEmployee(id);
-		return ResponseEntity.status(HttpStatus.OK).body("EmpId " + id + " is deleted successfully.");
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(Map.of("message", "EmpId " + id + " is deleted successfully."));
 	}
 
 }

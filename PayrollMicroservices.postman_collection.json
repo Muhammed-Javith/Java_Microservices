@@ -12,17 +12,17 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/api/payroll/get/15",
+					"raw": "http://localhost:8082/api/payroll/get/55",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "8082",
 					"path": [
 						"api",
 						"payroll",
 						"get",
-						"15"
+						"55"
 					]
 				}
 			},
@@ -35,7 +35,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"hra\":22000.00,\r\n    \"basic\":18000.00\r\n}",
+					"raw": "{\r\n    \"hra\":22000.00,\r\n    \"basic\":17000.00\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -43,17 +43,17 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/payroll/update/15",
+					"raw": "http://localhost:8082/api/payroll/update/55",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "8082",
 					"path": [
 						"api",
 						"payroll",
 						"update",
-						"15"
+						"55"
 					]
 				}
 			},
@@ -65,17 +65,17 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/api/payroll/del/2",
+					"raw": "http://localhost:8082/api/payroll/del/55",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "8082",
 					"path": [
 						"api",
 						"payroll",
 						"del",
-						"2"
+						"55"
 					]
 				}
 			},
@@ -88,7 +88,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"employeeId\":4,\r\n    \"hra\":21000.00,\r\n    \"basic\":18000.00\r\n}",
+					"raw": "{\r\n    \"employeeId\":55,\r\n    \"hra\":21000.00,\r\n    \"basic\":18000.00\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -96,12 +96,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/payroll/create",
+					"raw": "http://localhost:8082/api/payroll/create",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "8082",
 					"path": [
 						"api",
 						"payroll",
