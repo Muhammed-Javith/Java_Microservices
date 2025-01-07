@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.EmployeeNotFoundException;
+import com.mj.employee.exception.InvalidFileException;
 import com.mj.employee.exception.MissingFieldException;
 import com.mj.employee.payload.ErrorResponse;
 
@@ -20,7 +21,7 @@ public class EmployeeExceptionHandler {
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@ExceptionHandler({ EmployeeNotFoundException.class, MissingFieldException.class,
-			EmployeeAlreadyExistException.class })
+			EmployeeAlreadyExistException.class, InvalidFileException.class})
 	public ResponseEntity<ErrorResponse> handleExceptions(Exception exception) {
 		HttpStatus status = getStatusFromException(exception);
 		String message = exception.getMessage();
@@ -35,6 +36,9 @@ public class EmployeeExceptionHandler {
 		} else if (exception instanceof EmployeeAlreadyExistException) {
 			return HttpStatus.CONFLICT;
 		}
+		else if (exception instanceof InvalidFileException) {
+            return HttpStatus.UNSUPPORTED_MEDIA_TYPE;
+        }
 		return HttpStatus.INTERNAL_SERVER_ERROR; // Default status
 	}
 

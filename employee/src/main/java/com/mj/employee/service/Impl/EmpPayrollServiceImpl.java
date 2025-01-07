@@ -1,5 +1,8 @@
 package com.mj.employee.service.Impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,6 +126,45 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 			logger.error("Payroll not found for employee ID: {}", id);
 			throw new EmployeeNotFoundException(ex.contentUTF8());
 		}
+	}
+
+	@Override
+	public List<EmployeePayrollResponseDto> createEmployees(List<EmployeePayrollRequestDto> employeePayrollReqDtos)
+			throws EmployeeAlreadyExistException {
+		List<EmployeePayrollResponseDto> employeePayrollResponseDtos = new ArrayList<>();
+
+		for (EmployeePayrollRequestDto employeePayrollReqDto : employeePayrollReqDtos) {
+			EmployeeDto employeeDto = modelMapper.map(employeePayrollReqDto, EmployeeDto.class);
+			EmployeeDto createdEmployee;
+			try {
+				createdEmployee = employeeService.createEmployee(employeeDto);
+			} catch (EmployeeAlreadyExistException e) {
+				// Skip this employee if the email already exists
+				logger.warn("Skipping employee with email {}: {}", employeeDto.getEmail(), e.getMessage());
+				continue;
+			}
+
+			EmployeePayrollResponseDto employeePayrollResponseDto = modelMapper.map(createdEmployee,
+					EmployeePayrollResponseDto.class);
+			PayrollRequestDto payrollRequestDto = employeePayrollReqDto.getPayrollInfo();
+			payrollRequestDto.setEmployeeId(createdEmployee.getId());
+
+			try {
+				PayrollResponseDto payrollResDto = payrollClient.createPayroll(payrollRequestDto);
+				logger.info("Received response from Payroll Service: {}", payrollResDto);
+
+				employeePayrollResponseDto.setPayrollInfo(payrollResDto);
+				employeePayrollResponseDtos.add(employeePayrollResponseDto);
+			} catch (FeignException.BadRequest ex) {
+				employeeService.deleteEmployee(createdEmployee.getId());
+				throw new MissingFieldException(ex.contentUTF8());
+			} catch (FeignException.Conflict ex) {
+				employeeService.deleteEmployee(createdEmployee.getId());
+				throw new EmployeeAlreadyExistException(ex.contentUTF8());
+			}
+		}
+
+		return employeePayrollResponseDtos;
 	}
 
 }

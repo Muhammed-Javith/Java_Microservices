@@ -1,5 +1,7 @@
 package com.mj.employee.service;
 
+import java.util.List;
+
 import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.MissingFieldException;
 import com.mj.employee.payload.EmployeePayrollRequestDto;
@@ -16,5 +18,7 @@ public interface EmpPayrollService {
 			throws EmployeeAlreadyExistException, MissingFieldException;
 
 	void deleteEmployeeWithPayroll(Long id);
+
+	List<EmployeePayrollResponseDto> createEmployees(List<EmployeePayrollRequestDto> employeePayrollReqDtos) throws EmployeeAlreadyExistException;
 
 }
