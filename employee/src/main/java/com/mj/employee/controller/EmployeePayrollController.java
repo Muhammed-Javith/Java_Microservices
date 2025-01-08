@@ -86,7 +86,9 @@ public class EmployeePayrollController {
 	public ResponseEntity<?> createEmployeeWithCsv(@RequestParam("file") MultipartFile file)
 			throws EmployeeAlreadyExistException, MissingFieldException {
 		try {
-			validateCsvFormat(file);
+			if (!"text/csv".equals(file.getContentType()) && !file.getOriginalFilename().endsWith(".csv")) {
+				throw new InvalidFileException("Invalid file format. Please upload a valid CSV file.");
+			}
 			List<EmployeePayrollRequestDto> employeePayrollReqDtos = CSVProcessorUtility
 					.processCsvAndSendToPayroll(file);
 			logger.info("Processing CSV file and creating employees: {}", employeePayrollReqDtos);
@@ -99,16 +101,6 @@ public class EmployeePayrollController {
 		} catch (MissingFieldException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Error processing the file."));
 		}
-	}
-
-	private void validateCsvFormat(MultipartFile file) throws MissingFieldException {
-		if (file.isEmpty()) {
-			throw new MissingFieldException("The uploaded file is empty.");
-		}
-		if (!"text/csv".equals(file.getContentType()) && !file.getOriginalFilename().endsWith(".csv")) {
-			throw new InvalidFileException("Invalid file format. Please upload a valid CSV file.");
-		}
-
 	}
 
 }
