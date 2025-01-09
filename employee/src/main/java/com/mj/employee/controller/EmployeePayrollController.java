@@ -30,6 +30,7 @@ import com.mj.employee.payload.EmployeePayrollResponseDto;
 import com.mj.employee.service.EmpPayrollService;
 import com.mj.employee.util.CSVProcessorUtility;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -57,6 +58,7 @@ public class EmployeePayrollController {
 	}
 
 	@Operation(summary = "Get a Employee with Payroll Details by EmployeeId")
+	@CircuitBreaker(name = "payrollServiceBreaker", fallbackMethod = "payrollServiceFallback")
 	@GetMapping("/get/{id}")
 	public ResponseEntity<?> getEmployeeWithPayrollById(@EmployeeIdParam @PathVariable Long id) {
 		EmployeePayrollResponseDto employeeWithPayroll = empPayrollService.getEmployeeWithPayroll(id);
@@ -101,6 +103,13 @@ public class EmployeePayrollController {
 		} catch (MissingFieldException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Error processing the file."));
 		}
+	}
+
+	public ResponseEntity<?> payrollServiceFallback(Long id, Exception ex) {
+		logger.info("Fallback is executed because service is down : ", ex.getMessage());
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of("message",
+				"Fallback response: Unable to fetch payroll details for employee " + id, "reason", ex.getMessage()));
+
 	}
 
 }
