@@ -1,5 +1,6 @@
 package com.mj.employee.controller;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +26,12 @@ import com.mj.employee.annotation.EmployeeIdParam;
 import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.InvalidFileException;
 import com.mj.employee.exception.MissingFieldException;
+import com.mj.employee.payload.EmployeeDto;
 import com.mj.employee.payload.EmployeePayrollRequestDto;
 import com.mj.employee.payload.EmployeePayrollResponseDto;
+import com.mj.employee.payload.PayrollResponseDto;
 import com.mj.employee.service.EmpPayrollService;
+import com.mj.employee.service.EmployeeService;
 import com.mj.employee.util.CSVProcessorUtility;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -41,6 +45,9 @@ public class EmployeePayrollController {
 
 	@Autowired
 	private EmpPayrollService empPayrollService;
+
+	@Autowired
+	private EmployeeService employeeService;
 
 	Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
 
@@ -107,9 +114,17 @@ public class EmployeePayrollController {
 
 	public ResponseEntity<?> payrollServiceFallback(Long id, Exception ex) {
 		logger.info("Fallback is executed because service is down : ", ex.getMessage());
-		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of("message",
-				"Fallback response: Unable to fetch payroll details for employee " + id, "reason", ex.getMessage()));
+		EmployeeDto employeeDto = employeeService.getEmployeeById(id);
+		PayrollResponseDto fallbackPayroll = PayrollResponseDto.builder().hra(-1.0).basic(-1.0).totalSalary(-1.0)
+				.build();
+		EmployeePayrollResponseDto fallbackResponse = EmployeePayrollResponseDto.builder().id(employeeDto.getId())
+				.name(employeeDto.getName()).email(employeeDto.getEmail()).address(employeeDto.getAddress())
+				.payrollInfo(fallbackPayroll).build();
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("message", "Payroll service is currently unavailable. Returning fallback data for requested data");
+		response.put("fallbackData", fallbackResponse);
+		logger.info("Returning fallback data for ID : {}", id);
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
 
 	}
-
 }

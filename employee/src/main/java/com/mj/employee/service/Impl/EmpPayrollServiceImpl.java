@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.mj.employee.config.PayrollClient;
@@ -73,7 +72,7 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 		}
 	}
 
-	@Cacheable(value = "employees", key = "#id")
+	// @Cacheable(value = "employees", key = "#id")
 	@Override
 	public EmployeePayrollResponseDto getEmployeeWithPayroll(Long id) {
 		Employee employee = this.employeeRepository.findById(id)
