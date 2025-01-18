@@ -1,4 +1,4 @@
-package com.mj.employee.payload;
+package com.mj.apigateway.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeDto {
-
-	private Long id;
-
-	private String name;
-
-	private String email;
-
-	private String address;
+public class PayrollDto {
+	// private Long employeeId;
+	private double hra;
+	private double basic;
+	private double totalSalary;
 }

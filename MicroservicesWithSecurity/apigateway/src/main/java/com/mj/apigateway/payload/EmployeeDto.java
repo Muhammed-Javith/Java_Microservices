@@ -1,4 +1,4 @@
-package com.mj.employee.payload;
+package com.mj.apigateway.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
