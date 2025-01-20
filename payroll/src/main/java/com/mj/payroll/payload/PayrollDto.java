@@ -15,6 +15,9 @@ public class PayrollDto {
 
 	private double basic;
 
-	private double totalSalary;
+	private double ctc;
 
+	private double deductions;
+
+	private double netSalary;
 }

@@ -31,8 +31,8 @@ public class PayrollExceptionHandler {
 	}
 
 	private ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status) {
-		ErrorResponse errorResponse = new ErrorResponse(status.value(), status.getReasonPhrase(), message,
-				LocalDateTime.now().toString());
+		ErrorResponse errorResponse = new ErrorResponse(status.value(), status.getReasonPhrase(),
+				LocalDateTime.now().toString(), message);
 		return new ResponseEntity<>(errorResponse, status);
 	}
 }

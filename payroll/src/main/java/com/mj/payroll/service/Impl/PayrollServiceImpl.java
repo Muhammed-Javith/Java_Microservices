@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.mj.payroll.controller.PayrollController;
@@ -47,10 +45,13 @@ public class PayrollServiceImpl implements PayrollService {
 		logger.info("Received response from Payroll Service: {}", existingPayroll);
 		if (existingPayroll.isPresent()) {
 			logger.info("Received response from Payroll Service: {}");
-			throw new PayrollAlreadyExistException("Employee Id " + payrollDto.getEmployeeId() + " already exists.");
+			throw new PayrollAlreadyExistException("Employee Id " + payrollDto.getEmployeeId() + " already exists in payroll database.");
 		} else {
 			double gross = payrollDto.getHra() + payrollDto.getBasic();
-			payrollDto.setTotalSalary(gross);
+			payrollDto.setCtc(gross);
+			double deductions = (payrollDto.getDeductions() == 0.0) ? 200.0 : payrollDto.getDeductions();
+			payrollDto.setNetSalary(gross - deductions);
+			payrollDto.setDeductions(deductions);
 			Payroll payroll = this.mapToEntity(payrollDto);
 			Payroll savedPayroll = this.payrollRepository.save(payroll);
 			logger.info("Received response from Payroll Service: {}", savedPayroll);
@@ -58,7 +59,7 @@ public class PayrollServiceImpl implements PayrollService {
 		}
 	}
 
-	@Cacheable(value = "payroll", key = "#id")
+	// @Cacheable(value = "payroll", key = "#id")
 	@Override
 	public PayrollDto getPayrollByEmployeeId(Long id) {
 		Payroll payroll = this.payrollRepository.findById(id)
@@ -66,14 +67,18 @@ public class PayrollServiceImpl implements PayrollService {
 		return this.mapToDto(payroll);
 	}
 
-	@CachePut(value = "payroll", key = "#id")
+	// @CachePut(value = "payroll", key = "#id")
 	@Override
 	public PayrollDto updatePayroll(PayrollDto payrollDto, Long id) throws PayrollAlreadyExistException {
 		Payroll updatePayroll = this.payrollRepository.findById(id)
 				.orElseThrow(() -> new PayrollNotFoundException("Payroll id " + id + " is not found with Id"));
 		updatePayroll = this.mapToEntity(payrollDto);
 		updatePayroll.setEmployeeId(id);
-		updatePayroll.setTotalSalary(payrollDto.getHra() + payrollDto.getBasic());
+		double gross = payrollDto.getHra() + payrollDto.getBasic();
+		updatePayroll.setCtc(gross);
+		double deductions = (payrollDto.getDeductions() == 0.0) ? 200.0 : payrollDto.getDeductions();
+		updatePayroll.setDeductions(deductions);
+		updatePayroll.setNetSalary(gross - updatePayroll.getDeductions());
 		Payroll updatedPayroll = this.payrollRepository.save(updatePayroll);
 		return this.mapToDto(updatedPayroll);
 	}

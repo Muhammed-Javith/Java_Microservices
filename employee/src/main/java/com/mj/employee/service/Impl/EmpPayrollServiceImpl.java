@@ -50,14 +50,20 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 			throws EmployeeAlreadyExistException, MissingFieldException {
 
 		EmployeeDto employeeDto = modelMapper.map(employeePayrollReqDto, EmployeeDto.class);
-		EmployeeDto createdEmployee = employeeService.createEmployee(employeeDto);
-
+		EmployeeDto createdEmployee = null;
+		try {
+			// Try to create the employee
+			createdEmployee = employeeService.createEmployee(employeeDto);
+		} catch (EmployeeAlreadyExistException ex) {
+			// If employee already exists, return the exception
+			logger.error("Employee already exists: {}", ex.getMessage());
+			throw new EmployeeAlreadyExistException(ex.getMessage());
+		}
 		EmployeePayrollResponseDto employeePayrollResponseDto = modelMapper.map(createdEmployee,
 				EmployeePayrollResponseDto.class);
 
 		PayrollRequestDto payrollRequestDto = employeePayrollReqDto.getPayrollInfo();
 		payrollRequestDto.setEmployeeId(createdEmployee.getId());
-
 		try {
 			PayrollResponseDto payrollResDto = payrollClient.createPayroll(payrollRequestDto);
 			logger.info("Received response from Payroll Service: {}", payrollResDto);
@@ -67,6 +73,7 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 			employeeService.deleteEmployee(createdEmployee.getId());
 			throw new MissingFieldException(ex.contentUTF8());
 		} catch (FeignException.Conflict ex) {
+			logger.info(ex.getMessage());
 			employeeService.deleteEmployee(createdEmployee.getId());
 			throw new EmployeeAlreadyExistException(ex.contentUTF8());
 		}
@@ -122,7 +129,7 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 			employeeRepository.delete(employee);
 			logger.info("Successfully deleted employee with ID: {}", id);
 		} catch (FeignException.NotFound ex) {
-			logger.error("Payroll not found for employee ID: {}", id);
+			logger.error("Payroll not found for employee ID: {}", id, ex.contentUTF8());
 			throw new EmployeeNotFoundException(ex.contentUTF8());
 		}
 	}

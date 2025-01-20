@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mj.employee.annotation.EmployeeIdParam;
 import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.EmployeeNotFoundException;
@@ -50,6 +52,8 @@ public class EmployeePayrollController {
 	@Autowired
 	private EmployeeService employeeService;
 
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
 	Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
 
 	@Operation(summary = "Create Employee with Payroll")
@@ -58,12 +62,38 @@ public class EmployeePayrollController {
 	public ResponseEntity<?> createEmployeeWithPayroll(@RequestBody EmployeePayrollRequestDto employeePayrollReqDto)
 			throws EmployeeAlreadyExistException, MissingFieldException {
 		if (!StringUtils.hasText(employeePayrollReqDto.getName())
-				|| !StringUtils.hasText(employeePayrollReqDto.getEmail())) {
+				|| !StringUtils.hasText(employeePayrollReqDto.getEmail())
+				|| !StringUtils.hasText(employeePayrollReqDto.getPassword())) {
 			throw new MissingFieldException("Please enter all Employee details to proceed");
 		}
-		EmployeePayrollResponseDto employeeWithPayroll = empPayrollService
-				.createEmployeeWithPayroll(employeePayrollReqDto);
-		return ResponseEntity.status(HttpStatus.CREATED).body(employeeWithPayroll);
+		try {
+			EmployeePayrollResponseDto employeeWithPayroll = empPayrollService
+					.createEmployeeWithPayroll(employeePayrollReqDto);
+			logger.info("heelleloeoe");
+			return ResponseEntity.status(HttpStatus.CREATED).body(employeeWithPayroll);
+		} catch (EmployeeAlreadyExistException ex) {
+			logger.info("jello" + ex.getMessage());
+			String message = ex.getMessage();
+			if (message != null && message.startsWith("{") && message.endsWith("}")) {
+				try {
+					// Try to parse the exception message as JSON
+					JsonNode rootNode = objectMapper.readTree(message);
+					JsonNode errorMessageNode = rootNode.get("error");
+
+					// Return the JSON error message if valid
+					return ResponseEntity.status(HttpStatus.CONFLICT)
+							.body(Map.of("message", errorMessageNode.asText()));
+				} catch (Exception e) {
+					// If parsing fails, log the error and return the original message
+					logger.info("Parsing error: " + e.getMessage());
+					return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", e.getMessage()));
+				}
+			} else {
+				// If it's not JSON, return the message directly
+				return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", message));
+			}
+		}
+
 	}
 
 	@Operation(summary = "Get a Employee with Payroll Details by EmployeeId")
@@ -88,9 +118,21 @@ public class EmployeePayrollController {
 	@CircuitBreaker(name = "payrollServiceBreaker", fallbackMethod = "delPayrollServiceFallback")
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteEmployeeWithPayroll(@EmployeeIdParam @PathVariable Long id) {
-		empPayrollService.deleteEmployeeWithPayroll(id);
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(Map.of("message", "EmpId " + id + " is deleted successfully."));
+		try {
+			empPayrollService.deleteEmployeeWithPayroll(id);
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(Map.of("message", "EmpId " + id + " is deleted successfully."));
+		} catch (EmployeeNotFoundException ex) {
+			logger.info("hello");
+			logger.info("Employee not found: {}", ex.getMessage());
+			try {
+				JsonNode rootNode = objectMapper.readTree(ex.getMessage());
+				JsonNode errorMessageNode = rootNode.get("error");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", errorMessageNode.asText()));
+			} catch (Exception e) {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
+			}
+		}
 	}
 
 	@Operation(summary = "Create Employee with Payroll by CSV")
@@ -118,11 +160,13 @@ public class EmployeePayrollController {
 	public ResponseEntity<?> getPayrollServiceFallback(Long id, Exception ex) {
 		logger.info("Fallback is executed because service is down : ", ex.getMessage());
 		EmployeeDto employeeDto = employeeService.getEmployeeById(id);
-		PayrollResponseDto fallbackPayroll = PayrollResponseDto.builder().hra(-1.0).basic(-1.0).totalSalary(-1.0)
-				.build();
+		PayrollResponseDto fallbackPayroll = PayrollResponseDto.builder().hra(-1.0).basic(-1.0).ctc(-1.0)
+				.deductions(-1.0).netSalary(-1.0).build();
 		EmployeePayrollResponseDto fallbackResponse = EmployeePayrollResponseDto.builder().id(employeeDto.getId())
-				.name(employeeDto.getName()).email(employeeDto.getEmail()).address(employeeDto.getAddress())
-				.payrollInfo(fallbackPayroll).build();
+				.name(employeeDto.getName()).email(employeeDto.getEmail()).password(employeeDto.getPassword())
+				.role(employeeDto.getRole()).designation(employeeDto.getDesignation())
+				.department(employeeDto.getDepartment()).phoneNumber(employeeDto.getPhoneNumber())
+				.address(employeeDto.getAddress()).payrollInfo(fallbackPayroll).build();
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("message", "Payroll service is currently unavailable. Returning fallback data for requested data");
 		response.put("fallbackData", fallbackResponse);
@@ -135,7 +179,10 @@ public class EmployeePayrollController {
 			Exception ex) {
 		logger.info("Fallback is executed because service is down: {}", ex.getMessage());
 		EmployeeDto employeeDto = EmployeeDto.builder().name(employeePayrollReqDto.getName())
-				.email(employeePayrollReqDto.getEmail()).address(employeePayrollReqDto.getAddress()).build();
+				.email(employeePayrollReqDto.getEmail()).password(employeePayrollReqDto.getPassword())
+				.role(employeePayrollReqDto.getRole()).designation(employeePayrollReqDto.getDesignation())
+				.department(employeePayrollReqDto.getDepartment()).phoneNumber(employeePayrollReqDto.getPhoneNumber())
+				.address(employeePayrollReqDto.getAddress()).build();
 		try {
 			EmployeeDto createdEmployee = employeeService.getEmployeeByEmail(employeeDto.getEmail());
 			if (createdEmployee != null) {
@@ -147,11 +194,11 @@ public class EmployeePayrollController {
 			logger.warn("No partial entry found for employee with email: {}", employeePayrollReqDto.getEmail());
 		}
 		// Create a fallback payroll response
-		PayrollResponseDto fallbackPayroll = PayrollResponseDto.builder().hra(-1.0).basic(-1.0).totalSalary(-1.0)
-				.build();
+		PayrollResponseDto fallbackPayroll = PayrollResponseDto.builder().hra(-1.0).basic(-1.0).netSalary(-1.0).build();
 		// Create a fallback employee response
 		EmployeePayrollResponseDto fallbackResponse = EmployeePayrollResponseDto.builder().id(-1L).name("dummy")
-				.email("dummy@gmail.com").address("dummyx").payrollInfo(fallbackPayroll).build();
+				.email("dummy@gmail.com").password("********").role("dummmy Role").designation("Dummy")
+				.department("dummy").phoneNumber(-1L).address("dummyx").payrollInfo(fallbackPayroll).build();
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("message",
 				"Payroll service is currently unavailable. Returning fallback data for the created employee.");
@@ -163,11 +210,11 @@ public class EmployeePayrollController {
 	public ResponseEntity<?> delPayrollServiceFallback(Long id, Exception ex) {
 		logger.info("Fallback is executed because service is down: {}", ex.getMessage());
 		// Create a fallback payroll response
-		PayrollResponseDto fallbackPayroll = PayrollResponseDto.builder().hra(-1.0).basic(-1.0).totalSalary(-1.0)
-				.build();
+		PayrollResponseDto fallbackPayroll = PayrollResponseDto.builder().hra(-1.0).basic(-1.0).netSalary(-1.0).build();
 		// Create a fallback employee response
 		EmployeePayrollResponseDto fallbackResponse = EmployeePayrollResponseDto.builder().id(-1L).name("dummy")
-				.email("dummy@gmail.com").address("dummyx").payrollInfo(fallbackPayroll).build();
+				.email("dummy@gmail.com").password("********").role("dummmy Role").designation("Dummy")
+				.department("dummy").phoneNumber(-1L).address("dummyx").payrollInfo(fallbackPayroll).build();
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("message", "Payroll service is currently unavailable. Returning fallback data for requested data");
 		response.put("fallbackData", fallbackResponse);

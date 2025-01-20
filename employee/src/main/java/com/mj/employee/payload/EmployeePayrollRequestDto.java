@@ -10,6 +10,11 @@ import lombok.NoArgsConstructor;
 public class EmployeePayrollRequestDto {
 	private String name;
 	private String email;
+	private String password;
+	private String role;
+	private String designation;
+	private String department;
+	private Long phoneNumber;
 	private String address;
 	private PayrollRequestDto payrollInfo;
 }

@@ -24,18 +24,18 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/employee/salary/get/27",
+					"raw": "http://localhost:8080/api/employee/salary/get/39",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "8080",
 					"path": [
 						"api",
 						"employee",
 						"salary",
 						"get",
-						"27"
+						"39"
 					]
 				}
 			},
@@ -48,7 +48,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Aryan\",\r\n  \"email\": \"Aryan@gmail.com\",\r\n  \"address\": \"India\",\r\n  \"payrollInfo\": {\r\n    \"hra\": 50000,\r\n    \"basic\": 25000\r\n  }\r\n}",
+					"raw": "{\r\n    \"name\": \"raj\",\r\n    \"email\":\"rajsas.a@gmail.com\",\r\n    \"password\":\"1234\",\r\n    \"role\":\"ADMIN\",\r\n    \"designation\":\"EMP\",\r\n    \"department\":\"delivery\",\r\n    \"phoneNumber\":9087266897,\r\n    \"address\":\"India\",\r\n    \"payrollInfo\": {\r\n      \"employeeId\":155,\r\n      \"hra\":21000.00,\r\n      \"basic\":18000.00,\r\n      \"deductions\": 0\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -56,12 +56,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/employee/salary/create",
+					"raw": "http://localhost:8080/api/employee/salary/create",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8081",
+					"port": "8080",
 					"path": [
 						"api",
 						"employee",
@@ -79,7 +79,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Aryan\",\r\n  \"email\": \"Aryan.a@gmail.com\",\r\n  \"address\": \"India\",\r\n  \"payrollInfo\": {\r\n    \"hra\": 50000,\r\n    \"basic\": 25000\r\n  }\r\n}",
+					"raw": "{\r\n   \r\n    \"name\": \"raj\",\r\n    \"email\": \"rajva@gmail.com\",\r\n    \"password\": \"1234\",\r\n    \"role\": \"ADMIN\",\r\n    \"designation\": \"EMP\",\r\n    \"department\": \"delivery\",\r\n    \"phoneNumber\": 9087266897,\r\n    \"address\": \"India\",\r\n    \"payrollInfo\": {\r\n        \"hra\": 21000.0,\r\n        \"basic\": 18000.0,\r\n        \"ctc\": 39000.0,\r\n        \"deductions\": 1200.0,\r\n        \"netSalary\": 38800.0\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -87,7 +87,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/employee/salary/update/28",
+					"raw": "http://localhost:8081/api/employee/salary/update/38",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -98,7 +98,7 @@
 						"employee",
 						"salary",
 						"update",
-						"28"
+						"38"
 					]
 				}
 			},
@@ -110,7 +110,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/api/employee/salary/delete/27",
+					"raw": "http://localhost:8081/api/employee/salary/delete/38",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -121,7 +121,7 @@
 						"employee",
 						"salary",
 						"delete",
-						"27"
+						"38"
 					]
 				}
 			},

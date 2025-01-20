@@ -26,6 +26,21 @@ public class Employee {
 	private String email;
 
 	@Column(nullable = false)
+	private String password;
+
+	@Column(nullable = false)
+	private String role;
+
+	@Column(nullable = false)
+	private String designation;
+
+	@Column(nullable = false)
+	private String department;
+
+	@Column(nullable = false)
+	private Long phoneNumber;
+
+	@Column(nullable = false)
 	private String address;
 
 }

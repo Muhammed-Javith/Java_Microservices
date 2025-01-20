@@ -43,8 +43,9 @@ public class EmployeeController {
 	public ResponseEntity<?> createEmployee(@RequestBody EmployeeDto employeeDto)
 			throws MissingFieldException, EmployeeAlreadyExistException {
 		logger.info("Received request to create employee and validating fields here");
-		if (!StringUtils.hasText(employeeDto.getName()) || !StringUtils.hasText(employeeDto.getEmail())) {
-			throw new MissingFieldException("Please enter all details to proceed");
+		if (!StringUtils.hasText(employeeDto.getName()) || !StringUtils.hasText(employeeDto.getEmail())
+				|| !StringUtils.hasText(employeeDto.getPassword())) {
+			throw new MissingFieldException("Please enter Mandatory details to proceed");
 		}
 		logger.info("Create employee");
 		EmployeeDto createdEmployee = employeeService.createEmployee(employeeDto);

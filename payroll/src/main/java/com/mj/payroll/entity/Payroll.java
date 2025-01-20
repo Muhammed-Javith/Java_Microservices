@@ -22,6 +22,11 @@ public class Payroll {
 	private double basic;
 
 	@Column(nullable = false)
-	private double totalSalary;
+	private double ctc;
 
+	@Column(nullable = false)
+	private double deductions;
+
+	@Column(nullable = false)
+	private double netSalary;
 }

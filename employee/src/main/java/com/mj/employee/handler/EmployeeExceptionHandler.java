@@ -60,16 +60,17 @@ public class EmployeeExceptionHandler {
 	}
 
 	private String extractErrorMessage(String jsonString) {
+		
 		try {
 			JsonNode rootNode = objectMapper.readTree(jsonString);
-			JsonNode errorMessageNode = rootNode.get("errorMessage"); // Extract the errorMessage node
+			JsonNode errorMessageNode = rootNode.get("error"); // Extract the errorMessage node
 			if (errorMessageNode != null) {
 				return errorMessageNode.asText(); // Return the error message text
 			}
 		} catch (Exception e) {
 			// Fallback to a default message if JSON parsing fails
-			return "Some issues with response from MicroService 2";
+			return "Json parsing failed";
 		}
-		return "Some issue with MS2"; // Fallback if errorMessage is not found
+		return "Error Accuring while Accessing data from Payroll Service or May be data is not payroll service"; // Fallback if errorMessage is not found
 	}
 }

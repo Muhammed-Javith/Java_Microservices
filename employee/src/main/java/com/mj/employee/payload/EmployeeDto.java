@@ -17,5 +17,15 @@ public class EmployeeDto {
 
 	private String email;
 
+	private String password;
+
+	private String role;
+
+	private String designation;
+
+	private String department;
+
+	private Long phoneNumber;
+
 	private String address;
 }

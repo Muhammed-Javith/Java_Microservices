@@ -20,13 +20,15 @@ import com.mj.employee.payload.PayrollRequestDto;
 
 public class CSVProcessorUtility {
 
-	Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
+	static Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
 
 	public static List<EmployeePayrollRequestDto> processCsvAndSendToPayroll(MultipartFile file) {
 
 		// Variable to hold the CSV records
 		List<CSVRecord> records;
-		CSVFormat csvFormat = CSVFormat.DEFAULT.builder().setHeader("name", "address", "email", "hra", "basic").build();
+		CSVFormat csvFormat = CSVFormat.DEFAULT.builder().setSkipHeaderRecord(true).setHeader("name", "email",
+				"password", "role", "designation", "department", "phoneNumber", "address", "hra", "basic", "deductions")
+				.build();
 		try (CSVParser csvParser = new CSVParser(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8),
 				csvFormat)) {
 			// Store the records in a variable for later use
@@ -59,8 +61,8 @@ public class CSVProcessorUtility {
 	}
 
 	private static void validateRequiredFields(CSVRecord record) throws MissingFieldException {
-		if (isEmpty(record.get("name")) || isEmpty(record.get("email")) || isEmpty(record.get("hra"))
-				|| isEmpty(record.get("basic"))) {
+		if (isEmpty(record.get("name")) || isEmpty(record.get("email")) || isEmpty(record.get("password"))
+				|| isEmpty(record.get("hra")) || isEmpty(record.get("basic"))) {
 			throw new MissingFieldException("Missing required fields in CSV record");
 		}
 
@@ -77,14 +79,19 @@ public class CSVProcessorUtility {
 		PayrollRequestDto payrollDto = new PayrollRequestDto();
 
 		employeePayrollReqDto.setName(record.get("name"));
-		employeePayrollReqDto.setAddress(record.get("address"));
 		employeePayrollReqDto.setEmail(record.get("email"));
-
+		employeePayrollReqDto.setPassword(record.get("password"));
+		employeePayrollReqDto.setRole(record.get("role"));
+		employeePayrollReqDto.setDesignation(record.get("designation"));
+		employeePayrollReqDto.setDepartment(record.get("department"));
+		employeePayrollReqDto.setPhoneNumber(Long.parseLong(record.get("phoneNumber")));
+		employeePayrollReqDto.setAddress(record.get("address"));
 		payrollDto.setHra(Double.parseDouble(record.get("hra")));
 		payrollDto.setBasic(Double.parseDouble(record.get("basic")));
+		payrollDto.setDeductions(Double.parseDouble(record.get("deductions")));
 
 		employeePayrollReqDto.setPayrollInfo(payrollDto);
-
+		logger.info("Received request from Employee Service: {}", employeePayrollReqDto);
 		return employeePayrollReqDto;
 	}
 }

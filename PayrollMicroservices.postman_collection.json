@@ -35,7 +35,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"hra\":22000.00,\r\n    \"basic\":17000.00\r\n}",
+					"raw": "{\r\n    \"hra\": 21000.0,\r\n    \"basic\": 18000.0,\r\n    \"ctc\": 39000.0,\r\n    \"deductions\": 1200.0,\r\n    \"netSalary\": 38800.0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -43,7 +43,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8082/api/payroll/update/55",
+					"raw": "http://localhost:8082/api/payroll/update/29",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -53,7 +53,7 @@
 						"api",
 						"payroll",
 						"update",
-						"55"
+						"29"
 					]
 				}
 			},
@@ -65,7 +65,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8082/api/payroll/del/55",
+					"raw": "http://localhost:8082/api/payroll/del/30",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -75,7 +75,7 @@
 						"api",
 						"payroll",
 						"del",
-						"55"
+						"30"
 					]
 				}
 			},
@@ -88,7 +88,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"employeeId\":55,\r\n    \"hra\":21000.00,\r\n    \"basic\":18000.00\r\n}",
+					"raw": "{\r\n    \"employeeId\":155,\r\n    \"hra\":21000.00,\r\n    \"basic\":18000.00,\r\n    \"deductions\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

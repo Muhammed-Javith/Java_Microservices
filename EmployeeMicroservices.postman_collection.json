@@ -34,7 +34,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"ravi\",\r\n    \"email\":\"ravdfi@gmail.com\",\r\n    \"address\":\"India\"\r\n}",
+					"raw": "{\r\n    \"name\": \"muhammed\",\r\n    \"email\":\"muhammed.a@gmail.com\",\r\n    \"password\":\"1234\",\r\n    \"role\":\"ADMIN\",\r\n    \"designation\":\"EMP\",\r\n    \"department\":\"delivery\",\r\n    \"phoneNumber\":9087266897,\r\n    \"address\":\"India\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -75,7 +75,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/employees/get/23",
+					"raw": "http://localhost:8081/api/employees/get/30",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -85,7 +85,7 @@
 						"api",
 						"employees",
 						"get",
-						"23"
+						"30"
 					]
 				}
 			},
@@ -98,7 +98,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"ravi\",\r\n    \"email\":\"raviasls@gmail.com\",\r\n    \"address\":\"India\"\r\n}",
+					"raw": "{\r\n    \"name\": \"muhammed\",\r\n    \"email\": \"muhammed@gmail.com\",\r\n    \"password\": \"1234\",\r\n    \"role\": \"ADMIN\",\r\n    \"designation\": \"EMPL\",\r\n    \"department\": \"delivery\",\r\n    \"phoneNumber\": \"9087266897\",\r\n    \"address\": \"India\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -106,7 +106,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/employees/update/24",
+					"raw": "http://localhost:8081/api/employees/update/30",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -116,7 +116,7 @@
 						"api",
 						"employees",
 						"update",
-						"24"
+						"30"
 					]
 				}
 			},
@@ -128,7 +128,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/api/employees/del/24",
+					"raw": "http://localhost:8081/api/employees/del/30",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -138,7 +138,7 @@
 						"api",
 						"employees",
 						"del",
-						"24"
+						"30"
 					]
 				}
 			},

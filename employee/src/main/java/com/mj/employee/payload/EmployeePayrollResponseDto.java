@@ -13,6 +13,11 @@ public class EmployeePayrollResponseDto {
 	private Long id;
 	private String name;
 	private String email;
+	private String password;
+	private String role;
+	private String designation;
+	private String department;
+	private Long phoneNumber;
 	private String address;
 	private PayrollResponseDto payrollInfo;
 }

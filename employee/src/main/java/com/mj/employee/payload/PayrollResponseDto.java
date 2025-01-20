@@ -13,5 +13,7 @@ public class PayrollResponseDto {
 	// private Long employeeId;
 	private double hra;
 	private double basic;
-	private double totalSalary;
+	private double ctc;
+	private double deductions;
+	private double netSalary;
 }
