@@ -29,10 +29,10 @@ public class EmployeeAuthServiceImpl implements EmployeeAuthService {
 		Authentication authentication = authManager
 				.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
 		if (authentication.isAuthenticated()) {
-			logger.info("User logged in successfully: " + loginDto.getEmail());
+			logger.info("Employee logged in successfully: " + loginDto.getEmail());
 			return jwtService.generateToken(loginDto.getEmail());
 		} else {
-			return "fail";
+			return "Token generation failed!";
 		}
 	}
 
