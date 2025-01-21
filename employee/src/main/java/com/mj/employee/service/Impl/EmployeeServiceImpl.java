@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mj.employee.controller.EmployeeController;
@@ -28,6 +29,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
 	Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
@@ -50,6 +53,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new EmployeeAlreadyExistException("Employee email " + employeeDto.getEmail() + " already exists ");
 		} catch (EmployeeNotFoundException ex) {
 			Employee employee = this.mapToEntity(employeeDto);
+			employee.setPassword(encoder.encode(employee.getPassword()));
 			Employee savedemployee = this.employeeRepository.save(employee);
 			return this.mapToDto(savedemployee);
 		}
