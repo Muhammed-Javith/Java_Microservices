@@ -27,7 +27,7 @@ public class CSVProcessorUtility {
 		// Variable to hold the CSV records
 		List<CSVRecord> records;
 		CSVFormat csvFormat = CSVFormat.DEFAULT.builder().setSkipHeaderRecord(true).setHeader("name", "email",
-				"password", "role", "designation", "department", "phoneNumber", "address", "hra", "basic", "deductions")
+				"password", "level", "designation", "department", "phoneNumber", "address", "hra", "basic", "deductions")
 				.build();
 		try (CSVParser csvParser = new CSVParser(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8),
 				csvFormat)) {
@@ -81,7 +81,7 @@ public class CSVProcessorUtility {
 		employeePayrollReqDto.setName(record.get("name"));
 		employeePayrollReqDto.setEmail(record.get("email"));
 		employeePayrollReqDto.setPassword(record.get("password"));
-		employeePayrollReqDto.setRole(record.get("role"));
+		employeePayrollReqDto.setLevel(record.get("level"));
 		employeePayrollReqDto.setDesignation(record.get("designation"));
 		employeePayrollReqDto.setDepartment(record.get("department"));
 		employeePayrollReqDto.setPhoneNumber(Long.parseLong(record.get("phoneNumber")));

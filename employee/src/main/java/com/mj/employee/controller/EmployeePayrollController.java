@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,7 @@ import com.mj.employee.util.CSVProcessorUtility;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @Tag(name = "Microservice APIs", description = "Employee Payroll Microservive API Communication")
@@ -55,6 +57,16 @@ public class EmployeePayrollController {
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
+
+	@GetMapping("/")
+	public ResponseEntity<?> employeeHome() {
+		return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Welcome to Employee Management System"));
+	}
+
+	@GetMapping("/csrf_token")
+	public CsrfToken getCsrfToken(HttpServletRequest request) {
+		return (CsrfToken) request.getAttribute("_csrf");
+	}
 
 	@Operation(summary = "Create Employee with Payroll")
 	@CircuitBreaker(name = "payrollServiceBreaker", fallbackMethod = "createEmployeeWithPayrollFallback")
@@ -164,7 +176,7 @@ public class EmployeePayrollController {
 				.deductions(-1.0).netSalary(-1.0).build();
 		EmployeePayrollResponseDto fallbackResponse = EmployeePayrollResponseDto.builder().id(employeeDto.getId())
 				.name(employeeDto.getName()).email(employeeDto.getEmail()).password(employeeDto.getPassword())
-				.role(employeeDto.getRole()).designation(employeeDto.getDesignation())
+				.level(employeeDto.getLevel()).designation(employeeDto.getDesignation())
 				.department(employeeDto.getDepartment()).phoneNumber(employeeDto.getPhoneNumber())
 				.address(employeeDto.getAddress()).payrollInfo(fallbackPayroll).build();
 		Map<String, Object> response = new LinkedHashMap<>();
@@ -180,7 +192,7 @@ public class EmployeePayrollController {
 		logger.info("Fallback is executed because service is down: {}", ex.getMessage());
 		EmployeeDto employeeDto = EmployeeDto.builder().name(employeePayrollReqDto.getName())
 				.email(employeePayrollReqDto.getEmail()).password(employeePayrollReqDto.getPassword())
-				.role(employeePayrollReqDto.getRole()).designation(employeePayrollReqDto.getDesignation())
+				.level(employeePayrollReqDto.getLevel()).designation(employeePayrollReqDto.getDesignation())
 				.department(employeePayrollReqDto.getDepartment()).phoneNumber(employeePayrollReqDto.getPhoneNumber())
 				.address(employeePayrollReqDto.getAddress()).build();
 		try {
@@ -197,7 +209,7 @@ public class EmployeePayrollController {
 		PayrollResponseDto fallbackPayroll = PayrollResponseDto.builder().hra(-1.0).basic(-1.0).netSalary(-1.0).build();
 		// Create a fallback employee response
 		EmployeePayrollResponseDto fallbackResponse = EmployeePayrollResponseDto.builder().id(-1L).name("dummy")
-				.email("dummy@gmail.com").password("********").role("dummmy Role").designation("Dummy")
+				.email("dummy@gmail.com").password("********").level("dummmy Role").designation("Dummy")
 				.department("dummy").phoneNumber(-1L).address("dummyx").payrollInfo(fallbackPayroll).build();
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("message",
@@ -213,7 +225,7 @@ public class EmployeePayrollController {
 		PayrollResponseDto fallbackPayroll = PayrollResponseDto.builder().hra(-1.0).basic(-1.0).netSalary(-1.0).build();
 		// Create a fallback employee response
 		EmployeePayrollResponseDto fallbackResponse = EmployeePayrollResponseDto.builder().id(-1L).name("dummy")
-				.email("dummy@gmail.com").password("********").role("dummmy Role").designation("Dummy")
+				.email("dummy@gmail.com").password("********").level("dummmy Role").designation("Dummy")
 				.department("dummy").phoneNumber(-1L).address("dummyx").payrollInfo(fallbackPayroll).build();
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("message", "Payroll service is currently unavailable. Returning fallback data for requested data");

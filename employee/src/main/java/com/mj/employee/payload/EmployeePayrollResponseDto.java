@@ -14,7 +14,7 @@ public class EmployeePayrollResponseDto {
 	private String name;
 	private String email;
 	private String password;
-	private String role;
+	private String level;
 	private String designation;
 	private String department;
 	private Long phoneNumber;

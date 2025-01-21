@@ -19,7 +19,7 @@ public class EmployeeDto {
 
 	private String password;
 
-	private String role;
+	private String level;
 
 	private String designation;
 
