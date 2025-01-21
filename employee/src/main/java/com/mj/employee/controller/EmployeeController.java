@@ -39,7 +39,7 @@ public class EmployeeController {
 	Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Operation(summary = "Create a New Employee")
-	@PostMapping("/create")
+	@PostMapping("/register")
 	public ResponseEntity<?> createEmployee(@RequestBody EmployeeDto employeeDto)
 			throws MissingFieldException, EmployeeAlreadyExistException {
 		logger.info("Received request to create employee and validating fields here");

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +40,6 @@ import com.mj.employee.util.CSVProcessorUtility;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @Tag(name = "Microservice APIs", description = "Employee Payroll Microservive API Communication")
@@ -58,19 +56,9 @@ public class EmployeePayrollController {
 
 	Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
 
-	@GetMapping("/")
-	public ResponseEntity<?> employeeHome() {
-		return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Welcome to Employee Management System"));
-	}
-
-	@GetMapping("/csrf_token")
-	public CsrfToken getCsrfToken(HttpServletRequest request) {
-		return (CsrfToken) request.getAttribute("_csrf");
-	}
-
 	@Operation(summary = "Create Employee with Payroll")
 	@CircuitBreaker(name = "payrollServiceBreaker", fallbackMethod = "createEmployeeWithPayrollFallback")
-	@PostMapping("/create")
+	@PostMapping("/register")
 	public ResponseEntity<?> createEmployeeWithPayroll(@RequestBody EmployeePayrollRequestDto employeePayrollReqDto)
 			throws EmployeeAlreadyExistException, MissingFieldException {
 		if (!StringUtils.hasText(employeePayrollReqDto.getName())
