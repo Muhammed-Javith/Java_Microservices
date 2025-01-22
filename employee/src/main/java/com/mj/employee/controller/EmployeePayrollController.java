@@ -64,7 +64,8 @@ public class EmployeePayrollController {
 		if (!StringUtils.hasText(employeePayrollReqDto.getName())
 				|| !StringUtils.hasText(employeePayrollReqDto.getEmail())
 				|| !StringUtils.hasText(employeePayrollReqDto.getPassword())) {
-			throw new MissingFieldException("Please enter all Employee details to proceed");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(Map.of("message", "Please enter all Employee details to proceed"));
 		}
 		try {
 			EmployeePayrollResponseDto employeeWithPayroll = empPayrollService
@@ -94,6 +95,15 @@ public class EmployeePayrollController {
 			}
 		}
 
+	}
+
+	@Operation(summary = "Get all Employees with Payroll Details")
+	// @CircuitBreaker(name = "payrollServiceBreaker", fallbackMethod =
+	// "getAllPayrollServiceFallback")
+	@GetMapping("/getAll")
+	public ResponseEntity<?> getAllEmployeesWithPayroll() {
+		Map<String, Object> employeesWithPayroll = empPayrollService.getAllEmployeesWithPayroll();
+		return ResponseEntity.status(HttpStatus.OK).body(employeesWithPayroll);
 	}
 
 	@Operation(summary = "Get a Employee with Payroll Details by EmployeeId")

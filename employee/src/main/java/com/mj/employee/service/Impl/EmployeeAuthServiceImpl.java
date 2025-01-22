@@ -26,8 +26,9 @@ public class EmployeeAuthServiceImpl implements EmployeeAuthService {
 
 	@Override
 	public String verifyTheEmployee(LoginDto loginDto) {
-		Authentication authentication = authManager
-				.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+		UsernamePasswordAuthenticationToken authenticator = new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
+				loginDto.getPassword());
+		Authentication authentication = authManager.authenticate(authenticator);
 		if (authentication.isAuthenticated()) {
 			logger.info("Employee logged in successfully: " + loginDto.getEmail());
 			return jwtService.generateToken(loginDto.getEmail());
@@ -35,5 +36,4 @@ public class EmployeeAuthServiceImpl implements EmployeeAuthService {
 			return "Token generation failed!";
 		}
 	}
-
 }

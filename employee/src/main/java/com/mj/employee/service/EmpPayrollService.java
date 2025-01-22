@@ -1,6 +1,7 @@
 package com.mj.employee.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.exception.MissingFieldException;
@@ -20,5 +21,7 @@ public interface EmpPayrollService {
 	void deleteEmployeeWithPayroll(Long id);
 
 	List<EmployeePayrollResponseDto> createEmployees(List<EmployeePayrollRequestDto> employeePayrollReqDtos) throws EmployeeAlreadyExistException;
+
+	 Map<String, Object>  getAllEmployeesWithPayroll();
 
 }

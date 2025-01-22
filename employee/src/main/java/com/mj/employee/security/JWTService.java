@@ -10,8 +10,12 @@ import java.util.function.Function;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.mj.employee.controller.EmployeePayrollController;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,6 +24,8 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JWTService {
+
+	Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
 
 	private String secretkey = "";
 

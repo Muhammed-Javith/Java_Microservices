@@ -1,7 +1,12 @@
 package com.mj.employee.service.Impl;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -94,6 +99,40 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 			empPayrollResDto.setPayrollInfo(null);
 		}
 		return empPayrollResDto;
+	}
+
+	@Override
+	public Map<String, Object> getAllEmployeesWithPayroll() {
+		List<Employee> employees = employeeRepository.findAll();
+		// Initialize a counter for skipped employees
+		AtomicInteger skippedCount = new AtomicInteger();
+
+		// Filter and map employees with payroll details
+		List<EmployeePayrollResponseDto> employeePayrollList = employees.stream().map(employee -> {
+			try {
+				// Fetch payroll details for the employee
+				PayrollResponseDto payroll = payrollClient.getPayrollByEmployeeId(employee.getId());
+				// Map employee to EmployeePayrollResponseDto
+				return EmployeePayrollResponseDto.builder().id(employee.getId()).name(employee.getName())
+						.email(employee.getEmail()).password(employee.getPassword()).level(employee.getLevel())
+						.designation(employee.getDesignation()).department(employee.getDepartment())
+						.phoneNumber(employee.getPhoneNumber()).address(employee.getAddress()).payrollInfo(payroll)
+						.build();
+			} catch (Exception ex) {
+				// Increment the skipped count if payroll details are not found or an exception
+				// occurs
+				skippedCount.incrementAndGet();
+				return null; // Returning null for skipped employees
+			}
+		}).filter(Objects::nonNull) // Remove null values (skipped employees)
+				.collect(Collectors.toList());
+
+		// Prepare the response map
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("Employee with Payroll details", employeePayrollList);
+		response.put("Employee who doesn't have Payroll details", skippedCount.get());
+		return response;
+
 	}
 
 	@CachePut(value = "employees", key = "#id")

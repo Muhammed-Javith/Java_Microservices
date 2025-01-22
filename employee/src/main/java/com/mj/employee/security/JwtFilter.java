@@ -1,6 +1,7 @@
 package com.mj.employee.security;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -38,11 +39,13 @@ public class JwtFilter extends OncePerRequestFilter {
 			token = authHeader.substring(7);
 			try {
 				username = jwtService.extractUserName(token);
-			} catch (IllegalArgumentException e) {
-				logger.info("Illegal Argument while fetching the username !!");
-				e.printStackTrace();
 			} catch (ExpiredJwtException e) {
 				logger.info("Given jwt token is expired !!");
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				response.setContentType("application/json");
+				PrintWriter writer = response.getWriter();
+				writer.println("{\"error\": \"Access Denied\", \"message\": \""
+						+ "JWT token expired. Please login again." + "\"}");
 				e.printStackTrace();
 			} catch (MalformedJwtException e) {
 				logger.info("Some changed has done in token !! Invalid Token");
