@@ -5,6 +5,7 @@ public class AppUrlConstants {
 			"/api/auth/login", 
 			"/api/employees/register",
 			"/api/employee/salary/register", 
+			"/actuator/**",
 			"/v3/api-docs/**", 
 			"/swagger-ui/**", 
 			"/swagger-ui/**", // Swagger UI
