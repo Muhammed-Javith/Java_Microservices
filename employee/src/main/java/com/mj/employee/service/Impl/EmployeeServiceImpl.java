@@ -1,8 +1,5 @@
 package com.mj.employee.service.Impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -68,9 +69,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public List<EmployeeDto> getAllEmployee() {
-		List<Employee> employees = this.employeeRepository.findAll();
-		return employees.stream().map(employee -> this.mapToDto(employee)).collect(Collectors.toList());
+	public Page<EmployeeDto> getAllEmployees(int page, int size, String sortBy, boolean ascending) {
+		Sort.Direction sortDirection = ascending ? Sort.Direction.ASC : Sort.Direction.DESC;
+		Pageable pageable = PageRequest.of(page, size, sortDirection, sortBy);
+		Page<Employee> employeesPage = this.employeeRepository.findAll(pageable);
+		return employeesPage.map(this::mapToDto);
 	}
 
 	@CachePut(value = "employees", key = "#id")

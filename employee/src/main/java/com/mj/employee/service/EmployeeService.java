@@ -1,6 +1,6 @@
 package com.mj.employee.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import com.mj.employee.exception.EmployeeAlreadyExistException;
 import com.mj.employee.payload.EmployeeDto;
@@ -12,7 +12,7 @@ public interface EmployeeService {
 
 	EmployeeDto getEmployeeByEmail(String email);
 
-	List<EmployeeDto> getAllEmployee();
+	Page<EmployeeDto> getAllEmployees(int page, int size, String sortBy, boolean ascending);
 
 	EmployeeDto updateEmployee(EmployeeDto employeeDto, Long id) throws EmployeeAlreadyExistException;
 

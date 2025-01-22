@@ -22,6 +22,6 @@ public interface EmpPayrollService {
 
 	List<EmployeePayrollResponseDto> createEmployees(List<EmployeePayrollRequestDto> employeePayrollReqDtos) throws EmployeeAlreadyExistException;
 
-	 Map<String, Object>  getAllEmployeesWithPayroll();
+	 Map<String, Object>  getAllEmployeesWithPayroll(int page, int size, String sortBy, boolean ascending);
 
 }

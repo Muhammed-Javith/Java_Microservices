@@ -1,11 +1,11 @@
 package com.mj.employee.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mj.employee.annotation.EmployeeIdParam;
@@ -62,8 +63,10 @@ public class EmployeeController {
 
 	@Operation(summary = "Get all Employee Details")
 	@GetMapping("/getall")
-	public ResponseEntity<?> getAllEmployees() {
-		List<EmployeeDto> employees = employeeService.getAllEmployee();
+	public ResponseEntity<?> getAllEmployees(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size, @RequestParam(defaultValue = "id") String sortBy,
+			@RequestParam(defaultValue = "true") boolean ascending) {
+		Page<EmployeeDto> employees = employeeService.getAllEmployees(page, size, sortBy, ascending);
 		return ResponseEntity.status(HttpStatus.OK).body(employees);
 	}
 

@@ -14,6 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.mj.employee.config.PayrollClient;
@@ -102,13 +106,14 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 	}
 
 	@Override
-	public Map<String, Object> getAllEmployeesWithPayroll() {
-		List<Employee> employees = employeeRepository.findAll();
+	public Map<String, Object> getAllEmployeesWithPayroll(int page, int size, String sortBy, boolean ascending) {
+		Sort.Direction direction = ascending ? Sort.Direction.ASC : Sort.Direction.DESC;
+		Pageable pageable = PageRequest.of(page, size, direction, sortBy);
+		Page<Employee> employeesPage = employeeRepository.findAll(pageable);
 		// Initialize a counter for skipped employees
 		AtomicInteger skippedCount = new AtomicInteger();
-
 		// Filter and map employees with payroll details
-		List<EmployeePayrollResponseDto> employeePayrollList = employees.stream().map(employee -> {
+		List<EmployeePayrollResponseDto> employeePayrollList = employeesPage.getContent().stream().map(employee -> {
 			try {
 				// Fetch payroll details for the employee
 				PayrollResponseDto payroll = payrollClient.getPayrollByEmployeeId(employee.getId());
@@ -131,8 +136,10 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("Employee with Payroll details", employeePayrollList);
 		response.put("Employee who doesn't have Payroll details", skippedCount.get());
+		response.put("Total elements", employeesPage.getTotalElements());
+		response.put("Total pages", employeesPage.getTotalPages());
+		response.put("Current page", employeesPage.getNumber());
 		return response;
-
 	}
 
 	@CachePut(value = "employees", key = "#id")

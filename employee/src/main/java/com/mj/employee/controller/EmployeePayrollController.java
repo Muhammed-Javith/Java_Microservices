@@ -101,8 +101,10 @@ public class EmployeePayrollController {
 	// @CircuitBreaker(name = "payrollServiceBreaker", fallbackMethod =
 	// "getAllPayrollServiceFallback")
 	@GetMapping("/getAll")
-	public ResponseEntity<?> getAllEmployeesWithPayroll() {
-		Map<String, Object> employeesWithPayroll = empPayrollService.getAllEmployeesWithPayroll();
+	public ResponseEntity<?> getAllEmployeesWithPayroll(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size, @RequestParam(defaultValue = "id") String sortBy,
+			@RequestParam(defaultValue = "true") boolean ascending) {
+		Map<String, Object> employeesWithPayroll = empPayrollService.getAllEmployeesWithPayroll(page, size, sortBy, ascending);
 		return ResponseEntity.status(HttpStatus.OK).body(employeesWithPayroll);
 	}
 
