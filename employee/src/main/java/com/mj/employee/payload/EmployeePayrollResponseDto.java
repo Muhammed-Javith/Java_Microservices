@@ -1,5 +1,7 @@
 package com.mj.employee.payload;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +15,8 @@ public class EmployeePayrollResponseDto {
 	private Long id;
 	private String name;
 	private String email;
-	//private String password;
+	@JsonIgnore
+	private String password;
 	private String level;
 	private String designation;
 	private String department;
