@@ -84,6 +84,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 					"Employee email " + employeeDto.getEmail() + " already used by another Employee");
 		}
 		updateEmployee = this.mapToEntity(employeeDto);
+		updateEmployee.setPassword(encoder.encode(employeeDto.getPassword()));
 		updateEmployee.setId(id);
 		Employee updatedEmployee = this.employeeRepository.save(updateEmployee);
 		return this.mapToDto(updatedEmployee);
