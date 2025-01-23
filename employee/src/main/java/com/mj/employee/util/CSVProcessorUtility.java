@@ -81,7 +81,7 @@ public class CSVProcessorUtility {
 		employeePayrollReqDto.setName(record.get("name"));
 		employeePayrollReqDto.setEmail(record.get("email"));
 		employeePayrollReqDto.setPassword(record.get("password"));
-		employeePayrollReqDto.setLevel(record.get("level"));
+		employeePayrollReqDto.setRole(record.get("role"));
 		employeePayrollReqDto.setDesignation(record.get("designation"));
 		employeePayrollReqDto.setDepartment(record.get("department"));
 		employeePayrollReqDto.setPhoneNumber(Long.parseLong(record.get("phoneNumber")));

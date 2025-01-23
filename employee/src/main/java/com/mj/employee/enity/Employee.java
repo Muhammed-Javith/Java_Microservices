@@ -29,7 +29,7 @@ public class Employee {
 	private String password;
 
 	@Column(nullable = false)
-	private String level;
+	private String role;
 
 	@Column(nullable = false)
 	private String designation;

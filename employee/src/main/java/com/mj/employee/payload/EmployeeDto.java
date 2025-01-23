@@ -22,7 +22,7 @@ public class EmployeeDto {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 
-	private String level;
+	private String role;
 
 	private String designation;
 

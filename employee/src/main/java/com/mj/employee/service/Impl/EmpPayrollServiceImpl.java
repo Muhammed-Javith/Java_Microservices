@@ -119,7 +119,7 @@ public class EmpPayrollServiceImpl implements EmpPayrollService {
 				PayrollResponseDto payroll = payrollClient.getPayrollByEmployeeId(employee.getId());
 				// Map employee to EmployeePayrollResponseDto
 				return EmployeePayrollResponseDto.builder().id(employee.getId()).name(employee.getName())
-						.email(employee.getEmail()).password(employee.getPassword()).level(employee.getLevel())
+						.email(employee.getEmail()).password(employee.getPassword()).role(employee.getRole())
 						.designation(employee.getDesignation()).department(employee.getDepartment())
 						.phoneNumber(employee.getPhoneNumber()).address(employee.getAddress()).payrollInfo(payroll)
 						.build();

@@ -142,7 +142,7 @@ public class EmployeePayrollController {
 				JsonNode errorMessageNode = rootNode.get("error");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", errorMessageNode.asText()));
 			} catch (Exception e) {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "EmpId " + id + " Not Found."));
 			}
 		}
 	}
@@ -176,7 +176,7 @@ public class EmployeePayrollController {
 				.deductions(-1.0).netSalary(-1.0).build();
 		EmployeePayrollResponseDto fallbackResponse = EmployeePayrollResponseDto.builder().id(employeeDto.getId())
 				.name(employeeDto.getName()).email(employeeDto.getEmail()).password(employeeDto.getPassword())
-				.level(employeeDto.getLevel()).designation(employeeDto.getDesignation())
+				.role(employeeDto.getRole()).designation(employeeDto.getDesignation())
 				.department(employeeDto.getDepartment()).phoneNumber(employeeDto.getPhoneNumber())
 				.address(employeeDto.getAddress()).payrollInfo(fallbackPayroll).build();
 		Map<String, Object> response = new LinkedHashMap<>();
@@ -192,7 +192,7 @@ public class EmployeePayrollController {
 		logger.info("Fallback is executed because service is down: {}", ex.getMessage());
 		EmployeeDto employeeDto = EmployeeDto.builder().name(employeePayrollReqDto.getName())
 				.email(employeePayrollReqDto.getEmail()).password(employeePayrollReqDto.getPassword())
-				.level(employeePayrollReqDto.getLevel()).designation(employeePayrollReqDto.getDesignation())
+				.role(employeePayrollReqDto.getRole()).designation(employeePayrollReqDto.getDesignation())
 				.department(employeePayrollReqDto.getDepartment()).phoneNumber(employeePayrollReqDto.getPhoneNumber())
 				.address(employeePayrollReqDto.getAddress()).build();
 		try {
@@ -209,7 +209,7 @@ public class EmployeePayrollController {
 		PayrollResponseDto fallbackPayroll = PayrollResponseDto.builder().hra(-1.0).basic(-1.0).netSalary(-1.0).build();
 		// Create a fallback employee response
 		EmployeePayrollResponseDto fallbackResponse = EmployeePayrollResponseDto.builder().id(-1L).name("dummy")
-				.email("dummy@gmail.com").password("********").level("dummmy Role").designation("Dummy")
+				.email("dummy@gmail.com").password("********").role("dummmy Role").designation("Dummy")
 				.department("dummy").phoneNumber(-1L).address("dummyx").payrollInfo(fallbackPayroll).build();
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("message",
@@ -225,7 +225,7 @@ public class EmployeePayrollController {
 		PayrollResponseDto fallbackPayroll = PayrollResponseDto.builder().hra(-1.0).basic(-1.0).netSalary(-1.0).build();
 		// Create a fallback employee response
 		EmployeePayrollResponseDto fallbackResponse = EmployeePayrollResponseDto.builder().id(-1L).name("dummy")
-				.email("dummy@gmail.com").password("********").level("dummmy Role").designation("Dummy")
+				.email("dummy@gmail.com").password("********").role("dummmy Role").designation("Dummy")
 				.department("dummy").phoneNumber(-1L).address("dummyx").payrollInfo(fallbackPayroll).build();
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("message", "Payroll service is currently unavailable. Returning fallback data for requested data");

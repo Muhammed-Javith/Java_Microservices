@@ -17,7 +17,7 @@ public class EmployeePayrollResponseDto {
 	private String email;
 	@JsonIgnore
 	private String password;
-	private String level;
+	private String role;
 	private String designation;
 	private String department;
 	private Long phoneNumber;
