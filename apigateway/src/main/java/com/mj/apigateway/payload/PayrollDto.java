@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PayrollDto {
-	//private Long employeeId;
 	private double hra;
 	private double basic;
-	private double totalSalary;
+	private double ctc;
+	private double deductions;
+	private double netSalary;
 }
