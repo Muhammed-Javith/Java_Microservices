@@ -88,7 +88,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"employeeId\":155,\r\n    \"hra\":21000.00,\r\n    \"basic\":18000.00,\r\n    \"deductions\": 0\r\n}",
+					"raw": "{\r\n    \"employeeId\":2,\r\n    \"hra\":21000.00,\r\n    \"basic\":18000.00,\r\n    \"deductions\": null\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
