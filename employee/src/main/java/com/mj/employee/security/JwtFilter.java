@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,16 +32,22 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Autowired
 	EmployeeDetailsService employeeDetailsService;
 
+	@Value("${jwt.header.string}")
+	public String HEADER_STRING;
+
+	@Value("${jwt.token.prefix}")
+	public String TOKEN_PREFIX;
+
 	Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		try {
-			String authHeader = request.getHeader("Authorization");
+			String authHeader = request.getHeader(HEADER_STRING);
 			String token = null;
 			String username = null;
-			if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			if (authHeader != null && authHeader.startsWith(TOKEN_PREFIX)) {
 				token = authHeader.substring(7);
 			} else {
 				logger.info("Invalid Header Value !! ");

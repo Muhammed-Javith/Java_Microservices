@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,10 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JWTService {
-
+	
+    @Value("${jwt.token.validity}")
+    public long TOKEN_VALIDITY;
+    
 	Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
 
 	private String secretkey = "";
@@ -45,7 +49,7 @@ public class JWTService {
 		Map<String, Object> claims = new HashMap<>();
 		return Jwts.builder().claims().add(claims).subject(authentication.getName())
 				.issuedAt(new Date(System.currentTimeMillis()))
-				.expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10)).and().signWith(getKey()).compact();
+				.expiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY*1000)).and().signWith(getKey()).compact();
 
 	}
 
