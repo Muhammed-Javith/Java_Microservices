@@ -16,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.mj.employee.util.AppUrlConstants;
+import com.mj.employee.util.SecurityWhiteListUrlConstants;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +35,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		return http.csrf(csrf -> csrf.disable())
-				.authorizeHttpRequests(request -> request.requestMatchers(AppUrlConstants.PUBLIC_URLS).permitAll()
+				.authorizeHttpRequests(request -> request.requestMatchers(SecurityWhiteListUrlConstants.PUBLIC_URLS).permitAll()
 						.anyRequest().authenticated())
 				.httpBasic(Customizer.withDefaults()).exceptionHandling(ex -> ex.authenticationEntryPoint(point))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

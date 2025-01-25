@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeePrincipal implements UserDetails {
+public class EmployeeDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 

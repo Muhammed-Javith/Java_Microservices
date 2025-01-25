@@ -1,6 +1,6 @@
 package com.mj.employee.util;
 
-public class AppUrlConstants {
+public class SecurityWhiteListUrlConstants {
 	public static final String[] PUBLIC_URLS = {
 			"/api/auth/login", 
 			"/api/employees/register",

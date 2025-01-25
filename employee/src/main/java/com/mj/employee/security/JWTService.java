@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -40,9 +41,10 @@ public class JWTService {
 		}
 	}
 
-	public String generateToken(String username) {
+	public String generateToken(Authentication authentication) {
 		Map<String, Object> claims = new HashMap<>();
-		return Jwts.builder().claims().add(claims).subject(username).issuedAt(new Date(System.currentTimeMillis()))
+		return Jwts.builder().claims().add(claims).subject(authentication.getName())
+				.issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10)).and().signWith(getKey()).compact();
 
 	}

@@ -19,6 +19,6 @@ public class EmployeeDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws EmployeeNotFoundException {
 		Employee employee = employeeRepository.findByEmail(username)
 				.orElseThrow(() -> new EmployeeNotFoundException("Employee with email " + username + " not found"));
-		return new EmployeePrincipal(employee);
+		return new EmployeeDetails(employee);
 	}
 }

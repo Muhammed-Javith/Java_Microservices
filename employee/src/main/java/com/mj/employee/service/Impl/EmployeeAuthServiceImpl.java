@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.mj.employee.controller.EmployeeController;
@@ -29,9 +30,10 @@ public class EmployeeAuthServiceImpl implements EmployeeAuthService {
 		UsernamePasswordAuthenticationToken authenticator = new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
 				loginDto.getPassword());
 		Authentication authentication = authManager.authenticate(authenticator);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 		if (authentication.isAuthenticated()) {
 			logger.info("Employee logged in successfully: " + loginDto.getEmail());
-			return jwtService.generateToken(loginDto.getEmail());
+			return jwtService.generateToken(authentication);
 		} else {
 			return "Token generation failed!";
 		}
