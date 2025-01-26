@@ -26,10 +26,10 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JWTService {
-	
-    @Value("${jwt.token.validity}")
-    public long TOKEN_VALIDITY;
-    
+
+	@Value("${jwt.token.validity}")
+	public long TOKEN_VALIDITY;
+
 	Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
 
 	private String secretkey = "";
@@ -46,10 +46,13 @@ public class JWTService {
 	}
 
 	public String generateToken(Authentication authentication) {
-		Map<String, Object> claims = new HashMap<>();
-		return Jwts.builder().claims().add(claims).subject(authentication.getName())
-				.issuedAt(new Date(System.currentTimeMillis()))
-				.expiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY*1000)).and().signWith(getKey()).compact();
+		Map<String, Object> empclaims = new HashMap<>();
+		return createToken(empclaims, authentication.getName());
+	}
+
+	public String createToken(Map<String, Object> empclaims, String name) {
+		return Jwts.builder().claims(empclaims).subject(name).issuedAt(new Date(System.currentTimeMillis()))
+				.expiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000)).signWith(getKey()).compact();
 
 	}
 
